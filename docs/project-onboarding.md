@@ -61,9 +61,10 @@
 | F-08 | `.cursor/skills/sdlc-design/` | 推荐 | 设计阶段 Skill | 从标准库复制 |
 | F-09 | `.cursor/skills/sdlc-implement/` | 推荐 | 实现阶段 Skill | 从标准库复制 |
 | F-10 | `.cursor/skills/sdlc-verify/` | 推荐 | 验证阶段 Skill | 从标准库复制 |
-| F-11 | `harness.config.ts` | ✅ | 质量门禁 layers | 创建或保留已有 |
-| F-12 | `package.json` → `scripts.test:harness:ci` | ✅ | 合并前必跑命令 | 追加缺失 script |
-| F-13 | 项目特有 Rule（可选） | 可选 | 如 `auth-rbac.mdc` | 保留已有，不删 |
+| F-11 | `.cursor/skills/sdlc-review/` | ✅ | **每次 commit 前 Code Review** | 从标准库复制 |
+| F-12 | `harness.config.ts` | ✅ | 质量门禁 layers | 创建或保留已有 |
+| F-13 | `package.json` → `scripts.test:harness:ci` | ✅ | 合并前必跑命令 | 追加缺失 script |
+| F-14 | 项目特有 Rule（可选） | 可选 | 如 `auth-rbac.mdc` | 保留已有，不删 |
 
 **说明：** F-07～F-10 也可依赖用户级 Skill（`~/.cursor/skills/`），但**项目内复制**更稳定（新同事/新机器开箱即用）。
 

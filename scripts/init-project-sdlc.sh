@@ -78,7 +78,7 @@ copy_skills() {
 copy_sdlc_docs() {
   local dest="$1"
   mkdir -p "$dest/docs/qa"
-  for f in human-checkpoints.md agent-active-guidance.md; do
+  for f in human-checkpoints.md agent-active-guidance.md code-review.md; do
     local base="ai-sdlc-${f}"
     if [[ -f "$dest/docs/qa/$base" ]]; then
       warn "跳过已存在: docs/qa/$base"

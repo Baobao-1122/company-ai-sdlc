@@ -39,6 +39,7 @@
 | 2 阶段 Skill | `.cursor/skills/sdlc-*` | 按 SDLC 阶段触发专用流程 |
 | 3 项目 Rule | `.cursor/rules/*.mdc` | 编码规范、提交规范、文档同步 |
 | 4 质量门禁 | `harness.config.ts` | 合并前 `test:harness:ci` |
+| 4b Code Review | `sdlc-review` + Cursor Bugbot | **每次 commit 前** |
 | 5 自动化（可选） | Cursor Automations | PR 触发、定时巡检 |
 
 详细说明：[docs/workflow-overview.md](docs/workflow-overview.md) · **AI 主动引导**：[docs/agent-active-guidance.md](docs/agent-active-guidance.md) · **暂停点**：[docs/human-checkpoints.md](docs/human-checkpoints.md)

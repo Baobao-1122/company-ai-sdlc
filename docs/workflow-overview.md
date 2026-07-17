@@ -51,7 +51,8 @@ flowchart TB
 | 设计拆分 | `sdlc-design` | 「拆任务」「技术方案」 | 输出任务清单、验收 | **CP-02** |
 | 编码实现 | `sdlc-implement` | 「开始实现」 | 声明范围后编码 | CP-03/04 若触发 |
 | 验证门禁 | `sdlc-verify` | 「验收」 | 跑 harness | **CP-05** |
-| 提交发布 | git-commit Rule | 「提交」 | 拆分 commit | **CP-06～08** |
+| Code Review | `sdlc-review` | 「提交」时自动 | Bugbot [+ Security] | **CP-06 步骤1** |
+| 提交 | `sdlc-review` + git-commit | 「确认提交」 | commit 计划 | **CP-06 步骤2** |
 
 **人工暂停点完整定义：** [human-checkpoints.md](human-checkpoints.md)
 

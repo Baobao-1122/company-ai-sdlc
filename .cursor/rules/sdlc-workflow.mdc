@@ -1,20 +1,20 @@
 ---
-description: 公司 AI-SDLC 工作流：AI 主动引导 + 人工 CP 确认，稳健模式，始终生效
+description: 公司 AI-SDLC 工作流：AI 主动引导 + 人工 CP 确认 + 每次 commit 前 Code Review，稳健模式，始终生效
 alwaysApply: true
 ---
 
 # AI-SDLC：AI 引导，人工在 CP 介入
 
-完整定义：`docs/agent-active-guidance.md` + `docs/human-checkpoints.md`
+完整定义：`docs/agent-active-guidance.md` · `docs/human-checkpoints.md` · `docs/code-review.md`
 
 ## 协作模型
 
 - **AI 主导：** 宣布阶段、推进流程、在 CP 主动提问并给出回复选项
-- **人工跟随：** 看到 `⏸` 和「请你回复」时再介入；**不必自己猜何时说话**
+- **人工跟随：** 看到 `⏸` 和「请你回复」时再介入
 
 ## 会话开场（开发任务第一句必须）
 
-启用 SDLC，说明五阶段，建议从阶段 1 开始，问本次做哪一条；或小改动可说「跳过对齐」。
+启用 SDLC，说明 **需求 → 设计 → 实现 → 验证 → 提交（含 Review）**；建议从阶段 1 开始。
 
 ## 每条 SDLC 回复
 
@@ -24,7 +24,12 @@ alwaysApply: true
 
 ## 编码阶段预告
 
-CP-02 通过后、写代码前说一句：**接下来自动完成（无需回复）** → 改代码 + 跑 harness → **CP-05 再找你**
+CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 + 跑 harness → **CP-05 再找你**
+
+## 提交阶段预告（用户说「提交」后）
+
+**接下来自动完成（无需回复）：** 调用 **sdlc-review**（Bugbot [+ Security]）  
+**然后 CP-06 步骤 1/2 找你** — 每次 commit 必跑，禁止跳过
 
 ## CP 与回复选项（摘要）
 
@@ -35,15 +40,18 @@ CP-02 通过后、写代码前说一句：**接下来自动完成（无需回复
 | CP-03 | 「mock 继续」/「延后」/「等联调」 |
 | CP-04 | 「一起修」/「只修 xxx」/「跳过」 |
 | CP-05 | 「提交」/「继续改：…」/「下一项」/「暂停」 |
-| CP-06～10 | 见 human-checkpoints.md |
+| **CP-06** | **步骤1 Review：**「确认提交/先修/忽略」**步骤2 commit：**「确认提交」 |
+| CP-07～10 | 见 human-checkpoints.md |
 
 ## 禁止
 
-- CP 处不给编号选项、用开放式「你觉得呢？」
+- CP 处不给编号选项
 - 未收到用户回复就进入下一阶段
+- **跳过 sdlc-review 直接 git commit**
 - CP-05 后自动 commit/push
-- 未过 CP-01/02 写业务代码（小改动例外仍须 CP-05）
+- 未过 CP-01/02 写业务代码（小改动仍须 CP-05 + CP-06 Review）
 
 ## 质量门禁
 
-实现后跑 `test:harness:ci`，在 CP-05 汇报；未跑通不得声称完成
+- 实现后：`test:harness:ci`（CP-05）
+- 每次 commit 前：Code Review（CP-06 · Skill `sdlc-review` + Cursor Bugbot）

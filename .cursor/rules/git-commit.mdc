@@ -19,20 +19,23 @@ alwaysApply: true
 
 **每个 commit 只做一件事。** feat + fix + docs 混合时必须拆分。
 
+## 提交前检查（顺序固定）
+
+1. 跑 `test:harness:ci`（或项目等价命令）
+2. **Code Review（每次 commit 必跑）** — Skill `sdlc-review` + Cursor Bugbot（L2 路径 + Security）
+3. 过 **CP-06 两步**（Review 结论 + commit 确认）后再 `git commit`
+4. 无 `console.log`、无注释掉的废弃代码
+5. 用户未要求时不 `git push`
+
 ## 分支约定
 
 - 日常开发：`feat/*`、`fix/*`
 - `dev` 为集成主分支，禁止 Agent 直接 push/merge
 - `main` 仅 PR 合并
 
-## 提交前检查
+## 禁止
 
-- 无 `console.log`、无注释掉的废弃代码
-- 跑 `test:harness:ci`（或项目等价命令）
-- 用户未要求时不 `git push`
+- 跳过 Code Review 直接 commit
+- Message：`fix bug` / `update` / `修改` / `wip` / `.`
 
-## 禁止的 Message
-
-`fix bug` / `update` / `修改` / `wip` / `.`
-
-详细拆分流程见 Skill `web-git-commit-standard`。
+详细拆分流程见 Skill `web-git-commit-standard`；Review 见 `sdlc-review` 与 `docs/code-review.md`。
