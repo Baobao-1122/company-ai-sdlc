@@ -1,0 +1,38 @@
+---
+description: Git 提交规范，适用于公司所有 Web 项目，始终生效
+alwaysApply: true
+---
+
+# Git 提交规范
+
+## Commit Message 格式
+
+```
+<类型>(<范围>): <简短描述>
+```
+
+- **类型**：feat / fix / refactor / style / chore / docs / perf / test
+- **范围**：可选，如 `auth`、`billing`
+- **描述**：中文，动词开头，不超过 50 字，不加句号
+
+## 核心原则
+
+**每个 commit 只做一件事。** feat + fix + docs 混合时必须拆分。
+
+## 分支约定
+
+- 日常开发：`feat/*`、`fix/*`
+- `dev` 为集成主分支，禁止 Agent 直接 push/merge
+- `main` 仅 PR 合并
+
+## 提交前检查
+
+- 无 `console.log`、无注释掉的废弃代码
+- 跑 `test:harness:ci`（或项目等价命令）
+- 用户未要求时不 `git push`
+
+## 禁止的 Message
+
+`fix bug` / `update` / `修改` / `wip` / `.`
+
+详细拆分流程见 Skill `web-git-commit-standard`。

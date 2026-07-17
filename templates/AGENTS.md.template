@@ -1,0 +1,43 @@
+# AI / 研发协作入口
+
+本仓库为 **{{PROJECT_NAME}}**。大模型切换协作时，**先读本文件与 `docs/`**，再改代码。
+
+## 必读文档（按顺序）
+
+| 文档 | 用途 |
+|------|------|
+| [docs/prd.md](docs/prd.md) | 产品目标、功能范围、验收标准 |
+| [docs/dev-standard.md](docs/dev-standard.md) | 目录、代码规范（待建） |
+| [docs/testing.md](docs/testing.md) | 测试与 Harness 门禁（待建） |
+| [docs/deploy.md](docs/deploy.md) | 部署说明（待建） |
+
+## 项目边界（硬性）
+
+{{PROJECT_BOUNDARY}}
+
+## 关键代码位置
+
+{{KEY_PATHS}}
+
+## 本地启动
+
+{{LOCAL_START}}
+
+## AI-SDLC 协作节奏
+
+1. **一项一项**：先对齐一条需求，不写代码
+2. **你确认**后，再改代码 / 文档
+3. **完成后暂停**：汇报对齐结果、改了什么、如何验收；**不自动开下一项**
+4. **提交前必跑** `test:harness:ci`
+
+流程详见：[company-ai-sdlc/docs/workflow-overview.md](../company-ai-sdlc/docs/workflow-overview.md)（或团队文档站）
+
+## Git 提交（硬性）
+
+- **一 commit 一功能**
+- 提交前必跑 `test:harness:ci`
+- 用户未要求时不 `git push`
+
+## 文档维护
+
+需求或部署约定变更时，**同步更新对应 `docs/*.md`**，并在文档顶部「变更记录」追加一行。
