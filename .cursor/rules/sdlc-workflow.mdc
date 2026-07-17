@@ -54,4 +54,4 @@ CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 + �
 ## 质量门禁
 
 - 实现后：`test:harness:ci`（CP-05）
-- 每次 commit 前：Code Review（CP-06 · Skill `sdlc-review` + Cursor Bugbot）
+- 每次 commit 前：Code Review（CP-06 · **`sdlc-review`**）；**必须输出审查结论**（可提交/有问题、质量、风险）
