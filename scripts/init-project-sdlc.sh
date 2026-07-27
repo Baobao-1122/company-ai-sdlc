@@ -78,7 +78,7 @@ copy_skills() {
 copy_sdlc_docs() {
   local dest="$1"
   mkdir -p "$dest/docs/qa"
-  for f in human-checkpoints.md agent-active-guidance.md code-review.md; do
+  for f in human-checkpoints.md agent-active-guidance.md code-review.md decision-rubrics.md; do
     local base="ai-sdlc-${f}"
     if [[ -f "$dest/docs/qa/$base" ]]; then
       warn "跳过已存在: docs/qa/$base"
@@ -87,6 +87,15 @@ copy_sdlc_docs() {
       log "已复制: docs/qa/$base"
     fi
   done
+  local tpl="$SDLC_ROOT/templates/decision-rubrics-project.template.md"
+  if [[ -f "$tpl" ]]; then
+    if [[ -f "$dest/docs/qa/ai-sdlc-cp-extension.template.md" ]]; then
+      warn "跳过已存在: docs/qa/ai-sdlc-cp-extension.template.md"
+    else
+      cp "$tpl" "$dest/docs/qa/ai-sdlc-cp-extension.template.md"
+      log "已复制: docs/qa/ai-sdlc-cp-extension.template.md"
+    fi
+  fi
 }
 
 generate_agents_md() {
@@ -130,19 +139,32 @@ pnpm test:harness:ci               # 合并前
 
 ## AI-SDLC 协作（AI 引导，你在 CP 介入）
 
-**你不需要猜何时说话** — Agent 会在 `⏸` 处主动提问并给出编号选项。
+**你不需要猜何时说话** — Agent 会在 `⏸` 处输出 **决策包**（判什么、Allow/Stop、自检、推荐）并给出编号选项。
 
 | 文档 | 用途 |
 |------|------|
-| [docs/qa/ai-sdlc-agent-active-guidance.md](docs/qa/ai-sdlc-agent-active-guidance.md) | AI 如何引导、你该如何回复 |
-| [docs/qa/ai-sdlc-human-checkpoints.md](docs/qa/ai-sdlc-human-checkpoints.md) | CP-01～CP-10 定义 |
+| [docs/qa/ai-sdlc-agent-active-guidance.md](docs/qa/ai-sdlc-agent-active-guidance.md) | AI 如何引导、决策包模板 |
+| [docs/qa/ai-sdlc-human-checkpoints.md](docs/qa/ai-sdlc-human-checkpoints.md) | CP-01～CP-10 何时停 |
+| [docs/qa/ai-sdlc-decision-rubrics.md](docs/qa/ai-sdlc-decision-rubrics.md) | **CP 判断要点（Allow/Stop）** |
+| [docs/qa/ai-sdlc-code-review.md](docs/qa/ai-sdlc-code-review.md) | 每次 commit 前 Review |
 
-流程：**需求 → 设计 → 实现 → 验证 → （你要求时）提交**；提交前必跑 \`test:harness:ci\`。
+流程：**需求 → 设计 → 实现 → 验证 → （你要求时）提交**；提交前必跑 \`test:harness:ci\` + \`sdlc-review\`。
+
+## CP 判断扩展（项目特有，必填）
+
+在通用判据基础上追加本项目要点（模板见 [docs/qa/ai-sdlc-cp-extension.template.md](docs/qa/ai-sdlc-cp-extension.template.md)）：
+
+| CP | 项目追加要点 | Allow | Stop |
+|----|--------------|-------|------|
+| CP-01 | （待填：外部数据/接口依赖） | 缺口已说明 | 静默 mock |
+| CP-02 | （待填：敏感路径与 harness profile） | 验收命令完整 | 缺 profile |
+| CP-06 | （待填：L2 路径） | Review 含 Security | 敏感路径未 L2 |
+| CP-10 | （待填：生产/部署红线） | 负责人授权 | 无授权 |
 
 ## Git 提交（硬性）
 
 - **一 commit 一功能**
-- 提交前必跑 \`test:harness:ci\`
+- 提交前必跑 \`test:harness:ci\` + \`sdlc-review\`（CP-06 Code Review）
 - 用户未要求时不 \`git push\`
 
 ## 文档维护
@@ -252,7 +274,7 @@ cat <<EOF
 
 接入完成。请手动完成：
 
-  1. 编辑 AGENTS.md — 填必读文档、边界、启动命令、关键路径
+  1. 编辑 AGENTS.md — 填必读文档、边界、启动命令、关键路径、**§CP 判断扩展**
   2. 编辑 docs/prd.md — 写产品目标与 FU-xxx 功能清单
   3. 编辑 harness.config.ts — 按实际测试/lint 命令调整 layers
   4. 安装 Harness: pnpm add -D @linzhang1122/web-harness

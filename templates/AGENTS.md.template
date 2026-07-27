@@ -23,19 +23,34 @@
 
 {{LOCAL_START}}
 
-## AI-SDLC 协作节奏
+## AI-SDLC 协作（AI 引导，你在 CP 介入）
 
-1. **一项一项**：先对齐一条需求，不写代码
-2. **你确认**后，再改代码 / 文档
-3. **完成后暂停**：汇报对齐结果、改了什么、如何验收；**不自动开下一项**
-4. **提交前必跑** `test:harness:ci`
+Agent 在 `⏸ CP-xx` 处输出 **决策包**：①目的 ②判断要点 ③自检 ④推荐 ⑤编号选项。
 
-流程详见：[company-ai-sdlc/docs/workflow-overview.md](../company-ai-sdlc/docs/workflow-overview.md)（或团队文档站）
+| 文档 | 用途 |
+|------|------|
+| [docs/qa/ai-sdlc-agent-active-guidance.md](docs/qa/ai-sdlc-agent-active-guidance.md) | 决策包模板 |
+| [docs/qa/ai-sdlc-human-checkpoints.md](docs/qa/ai-sdlc-human-checkpoints.md) | CP 何时停 |
+| [docs/qa/ai-sdlc-decision-rubrics.md](docs/qa/ai-sdlc-decision-rubrics.md) | 通用 Allow/Stop 判据 |
+| [docs/qa/ai-sdlc-code-review.md](docs/qa/ai-sdlc-code-review.md) | 每次 commit 前 Review |
+
+流程：**需求 → 设计 → 实现 → 验证 → 提交**；提交前必跑 `test:harness:ci` + `sdlc-review`。
+
+## CP 判断扩展
+
+> 复制自 [docs/qa/ai-sdlc-cp-extension.template.md](docs/qa/ai-sdlc-cp-extension.template.md)，按项目填写。
+
+| CP | 项目追加要点 | Allow | Stop |
+|----|--------------|-------|------|
+| CP-01 | {{CP01_EXTENSION}} | | |
+| CP-02 | {{CP02_EXTENSION}} | | |
+| CP-06 | {{CP06_EXTENSION}} | | |
+| CP-10 | {{CP10_EXTENSION}} | | |
 
 ## Git 提交（硬性）
 
 - **一 commit 一功能**
-- 提交前必跑 `test:harness:ci`
+- 提交前必跑 `test:harness:ci` + `sdlc-review`（CP-06 Code Review）
 - 用户未要求时不 `git push`
 
 ## 文档维护
