@@ -17,7 +17,7 @@ description: AI-SDLC 阶段3编码。CP-02 通过后 AI 预告「无需回复」
 ```
 
 - 进行中：`📍 阶段 3/5 · 编码实现`
-- CP-03/04：必须用 agent-active-guidance §4 模板 + 编号选项
+- CP-03/04：必须用 **决策包**（业务项目 `docs/qa/ai-sdlc-decision-rubrics.md` §3 CP-03/04）+ 编号选项
 
 ## 前置
 

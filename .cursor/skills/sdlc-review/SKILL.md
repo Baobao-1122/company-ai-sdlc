@@ -141,4 +141,4 @@ Custom Instructions: <同上>
 
 ## 参考
 
-`docs/code-review.md` · `docs/human-checkpoints.md` · CP-06
+`docs/code-review.md` · 判据见业务项目 `docs/qa/ai-sdlc-decision-rubrics.md` 或标准库 `docs/decision-rubrics.md` §3 CP-06 · `docs/human-checkpoints.md`
