@@ -3,7 +3,7 @@
 > **文档 ID：** `CHECKPOINTS-v1`  
 > **策略：** 稳健优先（低风险）  
 > **受众：** Cursor Agent + 研发人员  
-> **最后更新：** 2026-07-17
+> **最后更新：** 2026-07-27
 
 ---
 
@@ -11,11 +11,12 @@
 
 **默认模式：AI 主动引导 + 人工在 CP 介入。** Agent 负责宣布阶段、提问、给出回复选项；人只需在 `⏸` 处按选项回复。
 
-**半自动执行：** Agent 可在**已确认范围内**连续读文档、写代码、跑测试；在 **CP 暂停点必须停止**，并用 **「请你回复」编号选项** 引导人工。
+**半自动执行：** Agent 可在**已确认范围内**连续读文档、写代码、跑测试；在 **CP 暂停点必须停止**，输出 **决策包**（判据 + 自检 + 推荐 + 编号选项）。
 
 **禁止：** Agent 自行跳过 CP、开放式甩锅（「你觉得呢？」）、自行 commit/push/合并。
 
-**主动引导细则：** [agent-active-guidance.md](agent-active-guidance.md)
+**主动引导细则：** [agent-active-guidance.md](agent-active-guidance.md)  
+**判断要点（Allow/Stop）：** [decision-rubrics.md](decision-rubrics.md)
 
 ---
 
@@ -80,22 +81,13 @@
 
 ## 5. Agent 暂停话术（必须使用）
 
-每个 CP 结束时，Agent 回复**必须**包含：`📍 阶段` · `我已完成` · **`请你回复（编号选项）`** · `⏸ CP-xx`
+每个 CP 结束时，Agent 回复**必须**包含完整 **决策包**（见 [decision-rubrics.md](decision-rubrics.md) §2）：
 
-完整模板见 [agent-active-guidance.md](agent-active-guidance.md) §4。
+`①目的` · `②判断要点` · `③Agent自检` · `④Agent推荐` · `⑤请你回复` · `⏸ CP-xx`
 
 | CP | 结尾必须包含 |
 |----|-------------|
-| CP-01 | `⏸ **CP-01**` + 选项：确认 / 修改 / 暂停 |
-| CP-02 | `⏸ **CP-02**` + 选项：开始实现 / 调整范围 / 暂停 |
-| CP-03 | `⏸ **CP-03**` + 选项：mock 继续 / 延后 / 等联调 |
-| CP-04 | `⏸ **CP-04**` + 选项：一起修 / 只修 xxx / 跳过 |
-| CP-05 | `⏸ **CP-05**` + 选项：提交 / 继续改 / 下一项 / 暂停 |
-| CP-06 | `⏸ **CP-06 · 步骤 1/2**` Review + 选项；步骤 2 commit 确认 |
-| CP-07 | `⏸ **CP-07**` + 选项：确认 push / 取消 |
-| CP-08 | `⏸ **CP-08**` + 选项：确认合并 / 先开 PR |
-| CP-09 | `⏸ **CP-09**` + 请指定下一项 |
-| CP-10 | `⏸ **CP-10**` + 说明风险，等负责人授权 |
+| CP-01～10 | 决策包五块 + `⏸ CP-xx`；**禁止**仅有编号选项 |
 
 ---
 
@@ -122,7 +114,8 @@
 | 本文档 | 完整 CP 定义（人读 + Agent 读） |
 | `.cursor/rules/sdlc-workflow.mdc` | Agent 始终加载的 CP 摘要 |
 | `.cursor/skills/sdlc-*` | 各阶段结束时强制 CP |
-| 项目 `AGENTS.md` | 项目特有 CP-10 触发条件（如 ECS 红线） |
+| 项目 `AGENTS.md` | 项目特有 CP-10 触发条件 + **§CP 判断扩展** |
+| `docs/decision-rubrics.md` | 通用 Allow/Stop 判据 |
 
 ---
 
@@ -130,5 +123,6 @@
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-07-27 | v1.3 | 强制 CP 决策包 + 链到 decision-rubrics |
 | 2026-07-17 | v1.2 | CP-06 改为每次 commit 前 Code Review 两步门禁 |
 | 2026-07-17 | v1.1 | 与 agent-active-guidance 联动；CP 须含编号回复选项 |

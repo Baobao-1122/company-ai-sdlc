@@ -11,6 +11,7 @@
 | [docs/code-review.md](docs/code-review.md) | **每次 commit 前 Code Review（Bugbot）** |
 | [docs/agent-active-guidance.md](docs/agent-active-guidance.md) | AI 主动引导 |
 | [docs/human-checkpoints.md](docs/human-checkpoints.md) | **人工确认暂停点 CP-01～CP-10** |
+| [docs/decision-rubrics.md](docs/decision-rubrics.md) | **CP 决策判据（Allow/Stop + 决策包）** |
 | [docs/project-onboarding.md](docs/project-onboarding.md) | **业务项目接入（AI 可执行版，新/已有）** |
 | [docs/stages/](docs/stages/) | 各 SDLC 阶段操作说明 |
 
@@ -25,6 +26,8 @@
 | 路径 | 说明 |
 |------|------|
 | `templates/AGENTS.md.template` | 业务项目 Agent 入口模板 |
+| `templates/decision-rubrics-project.template.md` | 项目 CP 判断扩展模板 |
+| `docs/decision-rubrics.md` | 通用 CP 判据 |
 | `templates/harness.config.example.ts` | Harness 门禁模板 |
 | `.cursor/rules/` | 公司通用 Rule（复制到业务项目） |
 | `.cursor/skills/sdlc-*` | SDLC 阶段 Skill |

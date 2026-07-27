@@ -1,7 +1,7 @@
 # AI 工作流总览
 
-**版本：** v1.0  
-**最后更新：** 2026-07-17
+**版本：** v1.1  
+**最后更新：** 2026-07-27
 
 ---
 
@@ -54,17 +54,19 @@ flowchart TB
 | Code Review | `sdlc-review` | 「提交」时自动 | Bugbot [+ Security] | **CP-06 步骤1** |
 | 提交 | `sdlc-review` + git-commit | 「确认提交」 | commit 计划 | **CP-06 步骤2** |
 
-**人工暂停点完整定义：** [human-checkpoints.md](human-checkpoints.md)
+**人工暂停点完整定义：** [human-checkpoints.md](human-checkpoints.md)  
+**每个 CP 判什么：** [decision-rubrics.md](decision-rubrics.md)（决策包：目的 → 判据 → 自检 → 推荐 → 选项）
 
 ## 4. 与人协作的硬性节奏
 
-**策略：稳健优先（半自动）。** 详见 [human-checkpoints.md](human-checkpoints.md)。
+**策略：稳健优先（半自动）。** 详见 [human-checkpoints.md](human-checkpoints.md) · [decision-rubrics.md](decision-rubrics.md)。
 
-1. **CP-01**：需求对齐后 **必须停**，等人确认
-2. **CP-02**：设计输出后 **必须停**，等「开始实现」
-3. **CP-05**：验证汇报后 **必须停**，不得自动 commit
-4. **CP-09**：一项完成后 **必须停**，不得自动开下一项
-5. **提交前必跑** `test:harness:ci`
+1. **CP-01～10**：每个 CP 须输出 **决策包**（①目的 ②判据 ③自检 ④推荐 ⑤选项）
+2. **CP-01**：需求对齐后 **必须停**，等人确认
+3. **CP-02**：设计输出后 **必须停**，等「开始实现」
+4. **CP-05**：验证汇报后 **必须停**，不得自动 commit
+5. **CP-09**：一项完成后 **必须停**，不得自动开下一项
+6. **提交前必跑** `test:harness:ci` + `sdlc-review`
 
 ## 5. Skill 分工
 
@@ -92,4 +94,5 @@ flowchart TB
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-07-27 | v1.1 | 新增决策判据层 decision-rubrics + 决策包 |
 | 2026-07-17 | v1.0 | 首版：五层架构与阶段 Skill 定义 |

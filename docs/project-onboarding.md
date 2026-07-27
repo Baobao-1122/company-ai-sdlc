@@ -3,7 +3,7 @@
 > **文档 ID：** `ONBOARDING-v2`  
 > **受众：** Cursor Agent、研发人员  
 > **用途：** 将业务 Web 项目接入 `company-ai-sdlc` AI 工作流  
-> **最后更新：** 2026-07-17
+> **最后更新：** 2026-07-27
 
 ---
 
@@ -27,7 +27,10 @@
 执行 §4 接入后填表（AGENTS.md 必填字段）
         │
         ▼
-复制 docs/human-checkpoints.md → 项目 docs/qa/ai-sdlc-human-checkpoints.md
+复制 SDLC 文档 → 项目 `docs/qa/ai-sdlc-*.md`（checkpoints / guidance / code-review / decision-rubrics）
+        │
+        ▼
+复制 `decision-rubrics-project.template.md` → `docs/qa/ai-sdlc-cp-extension.template.md`
         │
         ▼
 执行 §5 验证命令
@@ -65,6 +68,8 @@
 | F-12 | `harness.config.ts` | ✅ | 质量门禁 layers | 创建或保留已有 |
 | F-13 | `package.json` → `scripts.test:harness:ci` | ✅ | 合并前必跑命令 | 追加缺失 script |
 | F-14 | 项目特有 Rule（可选） | 可选 | 如 `auth-rbac.mdc` | 保留已有，不删 |
+| F-15 | `docs/qa/ai-sdlc-decision-rubrics.md` | ✅ | CP Allow/Stop 判据 | 从标准库复制 |
+| F-16 | `AGENTS.md` § **CP 判断扩展** | ✅ | 项目特有判据 | 从模板填写 |
 
 **说明：** F-07～F-10 也可依赖用户级 Skill（`~/.cursor/skills/`），但**项目内复制**更稳定（新同事/新机器开箱即用）。
 
@@ -203,6 +208,30 @@ Agent 接入已有仓库时，对照下表决定「保留什么、补什么」�
 | **lvneng-ops** | `AGENTS.md` | Rule、harness、Skill | 按 §3.3 补全；harness layers 改为 Python 项目命令 |
 | **任意新项目** | 无 | 全部 | §2 一键脚本 |
 
+### 3.5 标准库升级同步（已有项目）
+
+当 `company-ai-sdlc` 发布新版本（如新增决策判据），Agent 在**用户明确要求升级**时执行：
+
+| 优先级 | 资源 | 动作 | 覆盖策略 |
+|--------|------|------|----------|
+| P0 | `.cursor/rules/sdlc-workflow.mdc` | 对比 diff，**合并**决策包相关段落 | 不删项目特有 Rule |
+| P0 | `docs/qa/ai-sdlc-decision-rubrics.md` | 复制或 diff 合并 | 项目扩展仍在 AGENTS §CP 判断扩展 |
+| P1 | `docs/qa/ai-sdlc-*.md`（guidance/checkpoints/code-review） | 按需更新 | 跳过若项目有本地定制 |
+| P1 | `.cursor/skills/sdlc-*` | 复制缺失 Skill；已有则 diff | 默认不覆盖 |
+| P2 | `AGENTS.md` | 补 **§CP 判断扩展** 与 SDLC 文档链接 | **不覆盖**项目边界/启动命令 |
+
+```bash
+SDLC_ROOT="/path/to/company-ai-sdlc"
+PROJECT_ROOT="/path/to/existing-project"
+
+cp "$SDLC_ROOT/docs/decision-rubrics.md" \
+  "$PROJECT_ROOT/docs/qa/ai-sdlc-decision-rubrics.md"
+
+# Rule：仅当项目版本落后于标准库时，人工 diff 后合并 sdlc-workflow.mdc
+```
+
+升级后让用户在新会话试跑 CP-01，确认 Agent 输出含 ①～⑤ 决策包。
+
 ---
 
 ## §4 填表规范（Agent 写文件时用）
@@ -221,6 +250,7 @@ Agent 编辑 `AGENTS.md` 时，以下章节 **不得留「待填」**：
 | **Agent 执行规程**（可选但推荐） | 触发条件 → 必跑命令 | 项目特有校验，如 reconcile |
 | **Git 提交（硬性）** | 一 commit 一功能 + test:harness:ci | 固定文案即可 |
 | **AI-SDLC 协作节奏** | 一项一项 / 确认后写代码 / 完成后暂停 | 固定文案即可 |
+| **CP 判断扩展** | CP-01/02/06/10 项目 Allow/Stop | 读 deploy/Playbook/问用户 |
 
 **AGENTS.md 最小合格示例结构：**
 
@@ -297,13 +327,13 @@ node -e "const p=require('./package.json'); if(!p.scripts?.['test:harness:ci']) 
 # V3 harness 可执行（需已安装依赖）
 pnpm test:harness:ci || npm run test:harness:ci
 
-# V4 Agent 可读性（新会话测试）
+test -f docs/qa/ai-sdlc-decision-rubrics.md && echo "V1 decision-rubrics OK"
 # 提示用户或自行确认：Agent 能复述 AGENTS.md 中的边界与启动命令
 ```
 
 | 验证 ID | 通过条件 |
 |---------|----------|
-| V1 | F-01、F-03～F-06、F-11 文件存在 |
+| V1 | F-01、F-03～F-06、F-11、F-15 文件存在 |
 | V2 | `test:harness:ci` 在 package.json 中 |
 | V3 | harness ci profile 命令退出码 0（缺依赖时标 ⏭ 并说明） |
 | V4 | AGENTS.md 无「待填」占位；Agent 能正确复述项目边界 |
@@ -324,9 +354,11 @@ pnpm test:harness:ci || npm run test:harness:ci
 | ID | 项 | 状态 |
 | F-01 | AGENTS.md | ✅ / ❌ |
 | F-03～F-06 | 通用 Rule | ✅ / ❌ |
-| F-07～F-10 | SDLC Skill | ✅ / ⏭ 用用户级 |
-| F-11 | harness.config.ts | ✅ / ❌ |
-| F-12 | test:harness:ci | ✅ / ❌ |
+| F-07～F-11 | SDLC Skill | ✅ / ⏭ 用用户级 |
+| F-12 | harness.config.ts | ✅ / ❌ |
+| F-13 | test:harness:ci | ✅ / ❌ |
+| F-15 | ai-sdlc-decision-rubrics.md | ✅ / ❌ |
+| F-16 | AGENTS §CP 判断扩展 | ✅ / ❌ |
 
 ### 验证结果
 | 验证 | 结果 | 说明 |
@@ -357,9 +389,11 @@ pnpm test:harness:ci || npm run test:harness:ci
 | 2 | `cp $SDLC_ROOT/.cursor/rules/*.mdc → .cursor/rules/`（跳过已有） |
 | 3 | `cp -R $SDLC_ROOT/.cursor/skills/sdlc-* → .cursor/skills/`（跳过已有） |
 | 4 | `cp $SDLC_ROOT/templates/harness.config.example.ts → harness.config.ts`，按 §4.2 改 |
-| 5 | `cp $SDLC_ROOT/templates/docs/prd.template.md → docs/prd.md`（或链已有 PRD） |
-| 6 | 编辑 package.json 追加 `test:harness` / `test:harness:ci` |
-| 7 | 执行 §5 验证 |
+| 5 | `cp $SDLC_ROOT/docs/*.md（checkpoints/guidance/code-review/decision-rubrics）→ docs/qa/ai-sdlc-*.md` |
+| 6 | `cp $SDLC_ROOT/templates/decision-rubrics-project.template.md → docs/qa/ai-sdlc-cp-extension.template.md` |
+| 7 | `cp $SDLC_ROOT/templates/docs/prd.template.md → docs/prd.md`（或链已有 PRD） |
+| 8 | 编辑 package.json 追加 `test:harness` / `test:harness:ci` |
+| 9 | 执行 §5 验证 |
 
 ---
 
@@ -405,6 +439,8 @@ done
 | Harness 模板 | `templates/harness.config.example.ts` |
 | 通用 Rule | `.cursor/rules/*.mdc` |
 | 阶段 Skill | `.cursor/skills/sdlc-*/SKILL.md` |
+| CP 判据 | `docs/decision-rubrics.md` |
+| 项目判据模板 | `templates/decision-rubrics-project.template.md` |
 | 工作流说明 | `docs/workflow-overview.md` |
 | 阶段细则 | `docs/stages/01-requirements.md` … `05-release.md` |
 
@@ -414,5 +450,6 @@ done
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
-| 2026-07-17 | v1.0 | 首版：三种接入方式 |
+| 2026-07-27 | v2.1 | 决策判据 F-15/F-16、§3.5 升级同步 |
 | 2026-07-17 | v2.0 | AI 可执行版：决策树、达标清单、验证命令、汇报模板、已有项目矩阵 |
+| 2026-07-17 | v1.0 | 首版：三种接入方式 |

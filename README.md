@@ -42,7 +42,7 @@
 | 4b Code Review | `sdlc-review` + Cursor Bugbot | **每次 commit 前** |
 | 5 自动化（可选） | Cursor Automations | PR 触发、定时巡检 |
 
-详细说明：[docs/workflow-overview.md](docs/workflow-overview.md) · **AI 主动引导**：[docs/agent-active-guidance.md](docs/agent-active-guidance.md) · **暂停点**：[docs/human-checkpoints.md](docs/human-checkpoints.md)
+详细说明：[docs/workflow-overview.md](docs/workflow-overview.md) · **AI 主动引导**：[docs/agent-active-guidance.md](docs/agent-active-guidance.md) · **暂停点**：[docs/human-checkpoints.md](docs/human-checkpoints.md) · **决策判据**：[docs/decision-rubrics.md](docs/decision-rubrics.md)
 
 ## 目录结构
 
@@ -53,9 +53,11 @@ company-ai-sdlc/
 ├── docs/
 │   ├── workflow-overview.md  # 工作流总览
 │   ├── project-onboarding.md # 项目接入指南
+│   ├── decision-rubrics.md   # CP 决策判据（通用）
 │   └── stages/               # 各阶段操作说明
 ├── templates/                # 可复制到业务项目的模板
 │   ├── AGENTS.md.template
+│   ├── decision-rubrics-project.template.md
 │   ├── harness.config.example.ts
 │   └── docs/prd.template.md
 ├── .cursor/
