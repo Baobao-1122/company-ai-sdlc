@@ -5,7 +5,7 @@ alwaysApply: true
 
 # AI-SDLC：AI 引导，人工在 CP 介入
 
-完整定义：`docs/agent-active-guidance.md` · `docs/human-checkpoints.md` · `docs/code-review.md`
+完整定义：`docs/agent-active-guidance.md` · `docs/human-checkpoints.md` · `docs/decision-rubrics.md` · `docs/code-review.md`
 
 ## 协作模型
 
@@ -19,7 +19,7 @@ alwaysApply: true
 ## 每条 SDLC 回复
 
 1. **开头：** `📍 阶段 N/5 · xxx`
-2. **CP 处必须含：** `我已完成` · `请你回复（编号选项）` · `⏸ CP-xx`
+2. **CP 处必须含决策包五块：** `①目的` · `②判断要点` · `③Agent自检` · `④Agent推荐` · `⑤请你回复` · `⏸ CP-xx`（业务项目见 `docs/qa/ai-sdlc-decision-rubrics.md`，标准库见 `docs/decision-rubrics.md`）
 3. **过 CP 后：** `✅ 已收到「…」→ 进入阶段 N`，并预告下次 CP
 
 ## 编码阶段预告
@@ -45,7 +45,7 @@ CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 + �
 
 ## 禁止
 
-- CP 处不给编号选项
+- CP 处只有选项、无判据/自检/推荐
 - 未收到用户回复就进入下一阶段
 - **跳过 sdlc-review 直接 git commit**
 - CP-05 后自动 commit/push
