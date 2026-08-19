@@ -137,6 +137,14 @@ pnpm dev
 pnpm test:harness:ci               # 合并前
 \`\`\`
 
+## Agent 执行规程（按改动类型）
+
+| 触发条件 | 必跑命令 |
+|----------|----------|
+| 修改数据库 schema（无数据库时删除本行或标 N/A） | migration-prepare: \`（待填真实命令）\`; migration-apply: \`（待填真实命令）\`; structure-check: \`（待填真实命令）\`; api-smoke: \`（待填真实命令）\` |
+
+> 数据库项目缺少上述实际命令时，不得通过 CP-02/CP-05。
+
 ## AI-SDLC 协作（AI 引导，你在 CP 介入）
 
 **你不需要猜何时说话** — Agent 会在 `⏸` 处输出 **决策包**（判什么、Allow/Stop、自检、推荐）并给出编号选项。
@@ -275,10 +283,11 @@ cat <<EOF
 接入完成。请手动完成：
 
   1. 编辑 AGENTS.md — 填必读文档、边界、启动命令、关键路径、**§CP 判断扩展**
-  2. 编辑 docs/prd.md — 写产品目标与 FU-xxx 功能清单
-  3. 编辑 harness.config.ts — 按实际测试/lint 命令调整 layers
-  4. 安装 Harness: pnpm add -D @linzhang1122/web-harness
-  5. 验证: pnpm test:harness:ci
+  2. 数据库项目：填写 migration-prepare / migration-apply / structure-check / api-smoke 真实命令并执行接入 V5 登记检查
+  3. 编辑 docs/prd.md — 写产品目标与 FU-xxx 功能清单
+  4. 编辑 harness.config.ts — 按实际测试/lint 命令调整 layers
+  5. 安装 Harness: pnpm add -D @linzhang1122/web-harness
+  6. 验证: pnpm test:harness:ci
 
 详细说明: $SDLC_ROOT/docs/project-onboarding.md
 

@@ -1,0 +1,48 @@
+---
+description: Next.js middleware/proxy 改写 Response 时禁止破坏 Content-Type/body（防整页源码）
+globs: middleware.ts,proxy.ts,**/middleware/**/*,**/adjust-*-cookies*.ts,**/adjust-*-headers*.ts
+alwaysApply: false
+---
+
+# Next.js Middleware / Proxy Response 改写（硬性）
+
+适用于 `middleware.ts`、`proxy.ts`、Edge/Auth 包装器中**改写或重建 `Response` / `NextResponse`** 的代码（含只改 Set-Cookie 的场景）。
+
+## 禁止
+
+- 禁止 `await response.text()` / `response.json()` / `arrayBuffer()` 读完 body 后，再 `new Response(stringBody)` / `new NextResponse(stringBody)` **且未显式拷贝原 `Content-Type`**
+  - 默认会变成 `text/plain`，HTML 页面在浏览器里显示成「整页源码」
+- 禁止为改 Cookie/Header 而丢弃原 `status`、`statusText`、非 Set-Cookie 的响应头
+- 禁止在 middleware 与 `/api/auth/*` **同时**对同一会话 Cookie 做 Set-Cookie 改写（双重写入会导致 ClientFetchError / 会话错乱）
+
+## 正确做法
+
+```typescript
+// ✅ 只改 Header：透传原始 body 流，保留 Content-Type
+const headers = new Headers(response.headers)
+// …删除/重写 set-cookie 后…
+return new Response(response.body, {
+  status: response.status,
+  statusText: response.statusText,
+  headers,
+})
+```
+
+```typescript
+// ❌ 禁止：字符串 body 且未带 Content-Type
+const text = await response.text()
+return new NextResponse(text, { status: response.status, headers })
+```
+
+若必须缓冲 body：从原响应**显式**复制 `Content-Type`（及必要时 `Content-Encoding`），并补单测断言页面响应仍为 `text/html`（或业务约定类型）。
+
+## Auth Cookie 改写额外约束
+
+- 页面导航走 middleware/proxy 时，若校正 session Cookie：必须走「透传 body」路径
+- `/api/auth` 路由已处理 Cookie 时：matcher **排除** `api/auth`，避免双写
+- 单测须覆盖：改写后 `Content-Type` 与短期/持久 Cookie 属性
+
+## Review / 提交门禁
+
+- Diff 命中上述路径 → Code Review **L2**（Bugbot + Security）
+- Bugbot Custom Instructions 须包含本红线；发现「读 body 再 new Response(string)」且无 Content-Type → **High / 建议先修**

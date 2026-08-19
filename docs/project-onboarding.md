@@ -3,7 +3,7 @@
 > **文档 ID：** `ONBOARDING-v2`  
 > **受众：** Cursor Agent、研发人员  
 > **用途：** 将业务 Web 项目接入 `company-ai-sdlc` AI 工作流  
-> **最后更新：** 2026-07-27
+> **最后更新：** 2026-08-07
 
 ---
 
@@ -70,6 +70,7 @@
 | F-14 | 项目特有 Rule（可选） | 可选 | 如 `auth-rbac.mdc` | 保留已有，不删 |
 | F-15 | `docs/qa/ai-sdlc-decision-rubrics.md` | ✅ | CP Allow/Stop 判据 | 从标准库复制 |
 | F-16 | `AGENTS.md` § **CP 判断扩展** | ✅ | 项目特有判据 | 从模板填写 |
+| F-17 | `.cursor/rules/nextjs-middleware-response.mdc` | Next.js 推荐 | middleware/proxy 改写 Response 红线（防 text/plain 整页源码） | 从标准库复制；见 `docs/code-review.md` §8 |
 
 **说明：** F-07～F-10 也可依赖用户级 Skill（`~/.cursor/skills/`），但**项目内复制**更稳定（新同事/新机器开箱即用）。
 
@@ -174,23 +175,11 @@ grep -E "test:harness" "$PROJECT_ROOT/package.json" 2>/dev/null
 
 ### 3.3 单文件补全命令
 
+SDLC Rule、Skill 与配套文档存在跨文件约束，禁止在本节独立复制，统一按 §3.5 原子同步。本节只补不承载流程语义的独立骨架文件。
+
 ```bash
 SDLC_ROOT="/path/to/company-ai-sdlc"
 PROJECT_ROOT="/path/to/existing-project"
-
-# 只补缺失 Rule（不覆盖）
-mkdir -p "$PROJECT_ROOT/.cursor/rules"
-for f in "$SDLC_ROOT/.cursor/rules/"*.mdc; do
-  base="$(basename "$f")"
-  [[ -f "$PROJECT_ROOT/.cursor/rules/$base" ]] || cp "$f" "$PROJECT_ROOT/.cursor/rules/$base"
-done
-
-# 只补缺失 Skill（不覆盖）
-mkdir -p "$PROJECT_ROOT/.cursor/skills"
-for d in "$SDLC_ROOT/.cursor/skills/"*/; do
-  name="$(basename "$d")"
-  [[ -d "$PROJECT_ROOT/.cursor/skills/$name" ]] || cp -R "$d" "$PROJECT_ROOT/.cursor/skills/$name"
-done
 
 # 只补 harness（不存在时）
 [[ -f "$PROJECT_ROOT/harness.config.ts" ]] || \
@@ -205,7 +194,7 @@ Agent 接入已有仓库时，对照下表决定「保留什么、补什么」�
 |------|------|------|----------|
 | **saa-s-ui** | `.cursor/rules/*`（7+ 条）、`harness.config.ts`、`test:harness:ci` | 根 `AGENTS.md` | 生成根 AGENTS.md；复制 4 条 SDLC 通用 Rule 中缺失的；保留全部项目 Rule |
 | **lvneng-carbon-platform** | `AGENTS.md`、`harness.config.ts`、完整 `docs/` | `.cursor/rules/`、`sdlc-*` Skill | 复制 4 条 Rule + 4 个 Skill；不覆盖 AGENTS/harness |
-| **lvneng-ops** | `AGENTS.md` | Rule、harness、Skill | 按 §3.3 补全；harness layers 改为 Python 项目命令 |
+| **lvneng-ops** | `AGENTS.md` | Rule、harness、Skill | 先补 AGENTS 数据库命令并按 §3.5 原子同步 Rule/Skill/docs，再按 §3.3 补 harness；layers 改为 Python 项目命令 |
 | **任意新项目** | 无 | 全部 | §2 一键脚本 |
 
 ### 3.5 标准库升级同步（已有项目）
@@ -214,20 +203,52 @@ Agent 接入已有仓库时，对照下表决定「保留什么、补什么」�
 
 | 优先级 | 资源 | 动作 | 覆盖策略 |
 |--------|------|------|----------|
-| P0 | `.cursor/rules/sdlc-workflow.mdc` | 对比 diff，**合并**决策包相关段落 | 不删项目特有 Rule |
-| P0 | `docs/qa/ai-sdlc-decision-rubrics.md` | 复制或 diff 合并 | 项目扩展仍在 AGENTS §CP 判断扩展 |
-| P1 | `docs/qa/ai-sdlc-*.md`（guidance/checkpoints/code-review） | 按需更新 | 跳过若项目有本地定制 |
-| P1 | `.cursor/skills/sdlc-*` | 复制缺失 Skill；已有则 diff | 默认不覆盖 |
+| P0（先执行） | `AGENTS.md` | 数据库项目先补 migration prepare/apply、结构检查与针对性 API 冒烟实际命令 | 合并进已有 **Agent 执行规程**；无该章节时才新建，不覆盖项目边界/启动命令 |
+| P0（原子同步） | `.cursor/rules/sdlc-workflow.mdc` | 对比 diff，合并数据库变更链与决策包段落 | 不删项目特有 Rule |
+| P0（原子同步） | `.cursor/skills/sdlc-design`、`sdlc-implement`、`sdlc-verify` | 对比 diff，合并数据库计划、执行与验证要求 | 不覆盖项目特有补充 |
+| P0（原子同步） | `docs/qa/ai-sdlc-decision-rubrics.md`、guidance、checkpoints | 复制或 diff 合并数据库门禁内容 | 项目扩展仍在 AGENTS §CP 判断扩展 |
+| P1 | 其他 `docs/qa/ai-sdlc-*.md`、Skill | 按需更新 | 跳过若项目有本地定制 |
 | P2 | `AGENTS.md` | 补 **§CP 判断扩展** 与 SDLC 文档链接 | **不覆盖**项目边界/启动命令 |
+
+数据库项目升级必须先完成首行的命令登记与 V5 核验，再将三项“P0（原子同步）”一起完成；任一项缺失都应停止升级，不得留下无法执行或定义不完整的强制门禁。
 
 ```bash
 SDLC_ROOT="/path/to/company-ai-sdlc"
 PROJECT_ROOT="/path/to/existing-project"
 
-cp "$SDLC_ROOT/docs/decision-rubrics.md" \
-  "$PROJECT_ROOT/docs/qa/ai-sdlc-decision-rubrics.md"
+# 1. 先合并 AGENTS.md 数据库实际命令并完成 V5（数据库项目）
+# 2. 原子组目标缺失时先创建，已存在时保留并进入 diff 合并：
+mkdir -p "$PROJECT_ROOT/.cursor/rules" "$PROJECT_ROOT/.cursor/skills" "$PROJECT_ROOT/docs/qa"
+[[ -f "$PROJECT_ROOT/.cursor/rules/sdlc-workflow.mdc" ]] || \
+  cp "$SDLC_ROOT/.cursor/rules/sdlc-workflow.mdc" "$PROJECT_ROOT/.cursor/rules/sdlc-workflow.mdc"
+for skill in sdlc-design sdlc-implement sdlc-verify; do
+  [[ -d "$PROJECT_ROOT/.cursor/skills/$skill" ]] || \
+    cp -R "$SDLC_ROOT/.cursor/skills/$skill" "$PROJECT_ROOT/.cursor/skills/$skill"
+done
+[[ -f "$PROJECT_ROOT/docs/qa/ai-sdlc-decision-rubrics.md" ]] || \
+  cp "$SDLC_ROOT/docs/decision-rubrics.md" "$PROJECT_ROOT/docs/qa/ai-sdlc-decision-rubrics.md"
+[[ -f "$PROJECT_ROOT/docs/qa/ai-sdlc-agent-active-guidance.md" ]] || \
+  cp "$SDLC_ROOT/docs/agent-active-guidance.md" "$PROJECT_ROOT/docs/qa/ai-sdlc-agent-active-guidance.md"
+[[ -f "$PROJECT_ROOT/docs/qa/ai-sdlc-human-checkpoints.md" ]] || \
+  cp "$SDLC_ROOT/docs/human-checkpoints.md" "$PROJECT_ROOT/docs/qa/ai-sdlc-human-checkpoints.md"
 
-# Rule：仅当项目版本落后于标准库时，人工 diff 后合并 sdlc-workflow.mdc
+# 3. 对比并合并以下原子组，禁止只更新其中一项：
+diff -u "$PROJECT_ROOT/.cursor/rules/sdlc-workflow.mdc" \
+  "$SDLC_ROOT/.cursor/rules/sdlc-workflow.mdc" || true
+diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-design/SKILL.md" \
+  "$SDLC_ROOT/.cursor/skills/sdlc-design/SKILL.md" || true
+diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-implement/SKILL.md" \
+  "$SDLC_ROOT/.cursor/skills/sdlc-implement/SKILL.md" || true
+diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-verify/SKILL.md" \
+  "$SDLC_ROOT/.cursor/skills/sdlc-verify/SKILL.md" || true
+diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-decision-rubrics.md" \
+  "$SDLC_ROOT/docs/decision-rubrics.md" || true
+diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-agent-active-guidance.md" \
+  "$SDLC_ROOT/docs/agent-active-guidance.md" || true
+diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-human-checkpoints.md" \
+  "$SDLC_ROOT/docs/human-checkpoints.md" || true
+
+# 4. 合并上述 diff 后统一执行 §5 验证
 ```
 
 升级后让用户在新会话试跑 CP-01，确认 Agent 输出含 ①～⑤ 决策包。
@@ -247,10 +268,12 @@ Agent 编辑 `AGENTS.md` 时，以下章节 **不得留「待填」**：
 | **项目边界（硬性）** | 部署方式、数据依赖、权限范围、禁止事项 | 读 README / deploy doc / 问用户 |
 | **关键代码位置** | 表格：路径 + 说明 | 扫描仓库目录结构 |
 | **本地启动** | 可复制的 bash 代码块 | 读 package.json scripts + README |
-| **Agent 执行规程**（可选但推荐） | 触发条件 → 必跑命令 | 项目特有校验，如 reconcile |
+| **Agent 执行规程**（有数据库项目必填） | 触发条件 → 必跑命令；数据库项目须含 migration prepare/apply、状态/结构检查与 API 冒烟命令 | 读 package scripts、数据库文档与项目特有校验 |
 | **Git 提交（硬性）** | 一 commit 一功能 + test:harness:ci | 固定文案即可 |
 | **AI-SDLC 协作节奏** | 一项一项 / 确认后写代码 / 完成后暂停 | 固定文案即可 |
 | **CP 判断扩展** | CP-01/02/06/10 项目 Allow/Stop | 读 deploy/Playbook/问用户 |
+
+有数据库的项目必须在 `AGENTS.md` 写出项目实际命令，禁止只写“执行迁移”等不可运行的描述。若暂时没有结构检查命令，应将其登记为接入缺口，不能假定 migration 文件存在即表示数据库已更新。
 
 **AGENTS.md 最小合格示例结构：**
 
@@ -275,6 +298,12 @@ Agent 编辑 `AGENTS.md` 时，以下章节 **不得留「待填」**：
 pnpm install && pnpm dev
 pnpm test:harness:ci
 \`\`\`
+
+## Agent 执行规程（按改动类型；有数据库项目必填）
+| 触发条件 | 必跑命令 |
+| 修改数据库 schema | migration-prepare: `pnpm guard:migration-journal && pnpm guard:migration-integrity`; migration-apply: `pnpm db:migrate`; structure-check: `pnpm db:doctor`; api-smoke: `pnpm smoke:critical-api` |
+
+> 上述命令仅示例；必须替换为项目 `package.json` / 数据库文档中的真实可执行命令。`migration-prepare` 应覆盖工具生成，或手写 migration 后的 journal/manifest 检查。
 
 ## Git 提交（硬性）
 - 一 commit 一功能；提交前 test:harness:ci
@@ -328,7 +357,14 @@ node -e "const p=require('./package.json'); if(!p.scripts?.['test:harness:ci']) 
 pnpm test:harness:ci || npm run test:harness:ci
 
 test -f docs/qa/ai-sdlc-decision-rubrics.md && echo "V1 decision-rubrics OK"
-# 提示用户或自行确认：Agent 能复述 AGENTS.md 中的边界与启动命令
+
+# V4 AGENTS 完整性
+node -e "const fs=require('fs');const s=fs.readFileSync('AGENTS.md','utf8');if(/待填|\\{\\{[^}]+\\}\\}/.test(s))process.exit(1);console.log('V4 AGENTS placeholders OK')"
+
+# V5 数据库命令登记（条件执行）
+node -e "const fs=require('fs');const p=require('./package.json');const names=[...Object.keys(p.dependencies??{}),...Object.keys(p.devDependencies??{}),...Object.keys(p.scripts??{})].join(' ');const usesDb=/(drizzle|prisma|sequelize|typeorm|knex|mongoose|postgres|mysql|sqlite|(^|\\s)pg(\\s|$)|(^|\\s)db:)/i.test(names)||['lib/db','src/db','prisma','drizzle.config.ts','drizzle.config.js'].some((path)=>fs.existsSync(path));if(!usesDb){console.log('V5 database commands N/A');process.exit(0)}const s=fs.readFileSync('AGENTS.md','utf8');const x=s.match(/## Agent 执行规程[^\\n]*[\\s\\S]*?(?=\\n## |$)/)?.[0]??'';const r=x.split('\\n').find((line)=>/修改数据库 schema/i.test(line))??'';if(!/migration-prepare:\\s*\`[^\`]+\`/i.test(r)||!/migration-apply:\\s*\`[^\`]+\`/i.test(r)||!/structure-check:\\s*\`[^\`]+\`/i.test(r)||!/api-smoke:\\s*\`[^\`]+\`/i.test(r))process.exit(1);console.log('V5 database commands registered')"
+# V5 只校验命令登记，不在接入时操作数据库；实际执行属于具体 schema 任务的
+# CP-05 前置验证。任一命令未登记时，V5 失败，禁止声称接入完成。
 ```
 
 | 验证 ID | 通过条件 |
@@ -336,7 +372,8 @@ test -f docs/qa/ai-sdlc-decision-rubrics.md && echo "V1 decision-rubrics OK"
 | V1 | F-01、F-03～F-06、F-11、F-15 文件存在 |
 | V2 | `test:harness:ci` 在 package.json 中 |
 | V3 | harness ci profile 命令退出码 0（缺依赖时标 ⏭ 并说明） |
-| V4 | AGENTS.md 无「待填」占位；Agent 能正确复述项目边界 |
+| V4 | AGENTS.md 无占位且 Agent 能复述项目边界 |
+| V5 | 无数据库时标 N/A；有数据库时登记 migration prepare/apply、结构检查与针对性 API 冒烟四类命令，缺一项即失败；接入阶段不执行迁移 |
 
 ---
 
@@ -365,7 +402,8 @@ test -f docs/qa/ai-sdlc-decision-rubrics.md && echo "V1 decision-rubrics OK"
 | V1 文件 | ✅ | |
 | V2 scripts | ✅ | |
 | V3 harness | ✅ / ⏭ | 未装依赖则写补装命令 |
-| V4 可读性 | ✅ | |
+| V4 AGENTS 完整性 | ✅ | 无占位且能复述项目边界 |
+| V5 数据库命令登记 | ✅ / N/A / ❌ | 逐项列出四类命令；缺失时必须为 ❌ |
 
 ### 待你确认/补填
 1. …
@@ -450,6 +488,8 @@ done
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-08-07 | v2.3 | F-17：Next.js middleware Response 红线 Rule；对齐 code-review §8 |
+| 2026-08-03 | v2.2 | 数据库项目接入时必须登记 migration、结构检查与 API 冒烟命令 |
 | 2026-07-27 | v2.1 | 决策判据 F-15/F-16、§3.5 升级同步 |
 | 2026-07-17 | v2.0 | AI 可执行版：决策树、达标清单、验证命令、汇报模板、已有项目矩阵 |
 | 2026-07-17 | v1.0 | 首版：三种接入方式 |

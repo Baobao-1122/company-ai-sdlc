@@ -24,7 +24,7 @@ alwaysApply: true
 
 ## 编码阶段预告
 
-CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 + 跑 harness → **CP-05 再找你**
+CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 → 若改 schema，按 CP-02 已确认计划执行 migration prepare（生成或手写并检查）+ 应用 + 结构检查 + 针对性 API 冒烟（项目默认命令见 `AGENTS.md`）→ 跑 harness → **CP-05 再找你**
 
 ## 提交阶段预告（用户说「提交」后）
 
@@ -53,5 +53,7 @@ CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 + �
 
 ## 质量门禁
 
-- 实现后：`test:harness:ci`（CP-05）
+- 修改数据库 schema 时，CP-02 必须设计 migration、应用环境、结构检查、依赖 API 冒烟与回滚
+- CP-05 前置验证顺序：未改 schema → `test:harness:ci`；修改 schema → 按 CP-02 已确认计划完成 migration prepare（生成或手写并检查）→ 应用至目标验收库 → 结构检查 → 针对性 API 冒烟 → `test:harness:ci`；项目默认命令见 `AGENTS.md`
+- 数据库变更链任一步缺失或失败时，立即停止后续验证（包括 harness），进入 CP-05 汇报并推荐 **Stop**，不得进入页面验收或提交
 - 每次 commit 前：Code Review（CP-06 · **`sdlc-review`**）；**必须输出审查结论**（可提交/有问题、质量、风险）

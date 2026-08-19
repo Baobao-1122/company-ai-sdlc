@@ -23,6 +23,14 @@
 
 {{LOCAL_START}}
 
+## Agent 执行规程（按改动类型）
+
+| 触发条件 | 必跑命令 |
+|----------|----------|
+| 修改数据库 schema（无数据库时删除本行或标 N/A） | migration-prepare: `{{DATABASE_MIGRATION_PREPARE_COMMAND}}`; migration-apply: `{{DATABASE_MIGRATION_APPLY_COMMAND}}`; structure-check: `{{DATABASE_STRUCTURE_CHECK_COMMAND}}`; api-smoke: `{{DATABASE_API_SMOKE_COMMAND}}` |
+
+> 数据库项目必须填写真实可执行的 migration 生成/应用、结构检查与针对性 API 冒烟命令；缺失时不得通过 CP-02/CP-05。
+
 ## AI-SDLC 协作（AI 引导，你在 CP 介入）
 
 Agent 在 `⏸ CP-xx` 处输出 **决策包**：①目的 ②判断要点 ③自检 ④推荐 ⑤编号选项。
