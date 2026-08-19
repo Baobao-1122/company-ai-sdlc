@@ -4,7 +4,7 @@
 > **策略：** 质量 → 安全 → 效率  
 > **受众：** Cursor Agent + 研发人员  
 > **配套：** [human-checkpoints.md](human-checkpoints.md) · [agent-active-guidance.md](agent-active-guidance.md)  
-> **最后更新：** 2026-08-03
+> **最后更新：** 2026-08-19
 
 ---
 
@@ -54,6 +54,7 @@ Agent 在 `⏸ CP-xx` 前**必须**按序输出：
 | 3 | commit 可拆分 | 一 commit 一功能，类型不混 | feat+fix 混在一个 commit |
 | 4 | 文档同步已计划 | 行为/API 变更对应 docs | 改 API 未提 docs |
 | 5 | 数据库变更计划 | 不涉及数据库结构，或已列 migration prepare/apply、应用环境、验证与回滚方式 | 改 schema 但未计划 migration，或只准备文件而未计划应用验证 |
+| 6 | 业务数据影响计划 | 未命中数据影响面（查询/筛选语义、归属/归因、聚合、金额/电量口径、可见范围）并简述理由；或已列**只读**抽样对账计划（样本、指标、基线、通过标准） | 明显命中却写 N/A；计划含 INSERT/UPDATE/DELETE/「校验时修数」；未说明校验后只出结论与问题 |
 
 ---
 
@@ -86,6 +87,7 @@ Agent 在 `⏸ CP-xx` 前**必须**按序输出：
 | 2 | 改动与 CP-02 一致 | 未超范围 | 有未声明文件改动 |
 | 3 | 手动验收步骤 | Agent 已给出 | 缺失 |
 | 4 | 数据库结构一致性 | 不涉及数据库结构，或 migration 已纳入版本管理、应用至验收环境并通过结构检查与依赖 API 冒烟 | schema 已变更但无 migration，或 migration 仅准备未应用、验收库未更新、依赖 API 未验证 |
+| 5 | 业务数据抽样对账 | 未命中数据影响面；或已按 CP-02 计划完成**只读**核对，并给出结论与问题清单（含数字证据） | 缺对账证据；核对过程改删了业务数据；只说「已对过」无结论/问题表 |
 
 ---
 
@@ -98,8 +100,9 @@ Agent 在 `⏸ CP-xx` 前**必须**按序输出：
 | 3 | 代码质量 | 优/良 | 需改进且影响可维护性/安全 |
 | 4 | 风险等级 | 低/中且可说明 | 高 |
 | 5 | Next.js middleware/proxy 改写 Response（若 diff 命中） | 透传 `response.body` 且保留 `Content-Type`；无 auth Cookie 双写 | 读 body 重建为 string 且未拷贝 Content-Type；或 middleware 与 `/api/auth` 双写 |
+| 6 | 业务数据对账证据（若本次命中数据影响面） | CP-05 有只读核对结论与问题清单；diff 无「对账脚本写库」 | 无证据；或以校验名义含写库/删库逻辑 |
 
-见 [code-review.md](code-review.md) 审查结论表与 **§8 Response 改写红线**。
+见 [code-review.md](code-review.md) 审查结论表、**§8 Response 改写红线**与 **§9 业务数据只读对账**。
 
 ---
 
@@ -194,6 +197,7 @@ Agent 在 `⏸ CP-xx` 前**必须**按序输出：
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-08-19 | v1.3 | CP-02/05/06 增加业务数据影响只读抽样对账门禁（校验只出结论与问题，禁止改删数据） |
 | 2026-08-07 | v1.2 | CP-06 增加 middleware/proxy Response 改写红线判据 |
 | 2026-08-03 | v1.1 | CP-02/CP-05 增加数据库 migration 应用与运行时验证门禁 |
 | 2026-07-27 | v1.0 | 首版：决策包结构 + CP-01～10 通用判据 + 项目扩展机制 |

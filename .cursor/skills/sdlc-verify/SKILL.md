@@ -14,7 +14,11 @@ description: AI-SDLC 阶段4验证。跑 harness 后在 CP-05 输出决策包；
 
 须含 harness 结果 + ①～⑤ 五块。
 
-涉及数据库 schema 时，harness 前必须完成并汇报：migration prepare 并纳入版本管理 → 应用至目标验收库 → 迁移状态/结构一致性检查 → 依赖新结构的针对性 API 或数据访问冒烟。通用 Harness smoke 只有明确覆盖本次新结构时才能替代针对性冒烟。任一步未完成，CP-05 推荐 **Stop**；仅准备 migration 文件不算完成。
+涉及数据库 schema 时，harness **前**必须完成并汇报：migration prepare 并纳入版本管理 → 应用至目标验收库 → 迁移状态/结构一致性检查 → 依赖新结构的针对性 API 或数据访问冒烟。通用 Harness smoke 只有明确覆盖本次新结构时才能替代针对性冒烟。任一步未完成，**不得跑 harness**，CP-05 推荐 **Stop**；仅准备 migration 文件不算完成。
+
+命中业务数据影响面时，必须在 harness **前**完成**只读**抽样对账并汇报：结论（通过/有差异）、问题清单、数字证据；核对过程禁止改删业务数据。未执行、缺证据或核对中写库 → **不得跑 harness**，推荐 **Stop**。结论「有差异」但已有问题清单时仍可跑 harness，由 CP-05 决定是否提交。
+
+两者都命中时顺序：**结构链 → 只读对账 → harness → CP-05**。
 
 ```markdown
 📍 阶段 4/5 · 验证完成 · **等待你的下一步指示**
@@ -26,6 +30,13 @@ description: AI-SDLC 阶段4验证。跑 harness 后在 CP-05 输出决策包；
 - 目标验收环境与应用结果：…
 - 迁移状态/结构一致性检查：✅ / ❌
 - 依赖新结构的 API 或数据访问冒烟：✅ / ❌
+
+### 业务数据只读对账（命中数据影响面时必填）
+- 样本与指标：…
+- 基线 vs 改后：…
+- 结论：通过 / 有差异
+- 问题清单：…（无则写「无」）
+- 是否改删数据：否（必须为否）
 
 ### Harness 与手动验收
 - `test:harness:ci`：✅ / ❌ / ⛔ 前置失败未执行（此时 CP-05 推荐 Stop）
@@ -45,7 +56,10 @@ description: AI-SDLC 阶段4验证。跑 harness 后在 CP-05 输出决策包；
 - CP-05 后直接 commit
 - CP-05 只有选项、无判据/自检/推荐
 - 数据库结构变更未应用到验收环境就声称完成
+- 以校验/对账名义修改或删除业务数据
+- 命中数据影响面却无结论与问题清单
+- 只读对账或结构链未完成仍执行 harness
 
 ## 参考
 
-`docs/decision-rubrics.md` · `docs/code-review.md` · `sdlc-review`
+`docs/decision-rubrics.md` · `docs/code-review.md`（含 §9） · `sdlc-review`
