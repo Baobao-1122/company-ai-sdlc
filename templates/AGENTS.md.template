@@ -28,8 +28,10 @@
 | 触发条件 | 必跑命令 |
 |----------|----------|
 | 修改数据库 schema（无数据库时删除本行或标 N/A） | migration-prepare: `{{DATABASE_MIGRATION_PREPARE_COMMAND}}`; migration-apply: `{{DATABASE_MIGRATION_APPLY_COMMAND}}`; structure-check: `{{DATABASE_STRUCTURE_CHECK_COMMAND}}`; api-smoke: `{{DATABASE_API_SMOKE_COMMAND}}` |
+| 命中业务数据影响面（查询语义/归属/聚合/金额口径等；可选） | 只读对账：`{{DATA_RECONCILE_READONLY_COMMAND}}`（无脚本时可手工 SQL/导出对比；**禁止**写库；产出结论与问题清单） |
 
-> 数据库项目必须填写真实可执行的 migration 生成/应用、结构检查与针对性 API 冒烟命令；缺失时不得通过 CP-02/CP-05。
+> 数据库项目必须填写真实可执行的 migration 生成/应用、结构检查与针对性 API 冒烟命令；缺失时不得通过 CP-02/CP-05。  
+> 业务数据对账命令为可选登记：有则填写只读命令；无则允许手工核对，但校验过程仍禁止改删业务数据。
 
 ## AI-SDLC 协作（AI 引导，你在 CP 介入）
 

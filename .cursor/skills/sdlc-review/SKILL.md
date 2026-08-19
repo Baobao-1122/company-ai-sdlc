@@ -42,7 +42,7 @@ description: AI-SDLC 提交前 Code Review。每次 git commit 前必跑；编�
 ```text
 Full Repository Path: <项目绝对路径>
 Diff: uncommitted changes
-Custom Instructions: <项目 AGENTS.md 中的审查关注点；若 diff 含 middleware/proxy/auth Cookie 改写，必须追加：禁止读 body 再 new Response(string) 未拷贝 Content-Type；透传 response.body；禁止与 /api/auth 双写会话 Cookie>
+Custom Instructions: <项目 AGENTS.md 中的审查关注点；若 diff 含 middleware/proxy/auth Cookie 改写，必须追加：禁止读 body 再 new Response(string) 未拷贝 Content-Type；透传 response.body；禁止与 /api/auth 双写会话 Cookie；若本次命中业务数据影响面，必须追加：须有只读对账结论与问题清单；禁止以校验名义写库/删库>
 ```
 
 按 `review-bugbot` Skill 处理失败重试与结果汇总。
@@ -141,4 +141,4 @@ Custom Instructions: <同上>
 
 ## 参考
 
-`docs/code-review.md`（含 §8 Middleware Response 红线）· 判据见业务项目 `docs/qa/ai-sdlc-decision-rubrics.md` 或标准库 `docs/decision-rubrics.md` §3 CP-06 · `docs/human-checkpoints.md`
+`docs/code-review.md`（含 §8 Middleware Response 红线、§9 业务数据只读对账）· 判据见业务项目 `docs/qa/ai-sdlc-decision-rubrics.md` 或标准库 `docs/decision-rubrics.md` §3 CP-06 · `docs/human-checkpoints.md`

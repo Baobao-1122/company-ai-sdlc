@@ -24,7 +24,7 @@ alwaysApply: true
 
 ## 编码阶段预告
 
-CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 → 若改 schema，按 CP-02 已确认计划执行 migration prepare（生成或手写并检查）+ 应用 + 结构检查 + 针对性 API 冒烟（项目默认命令见 `AGENTS.md`）→ 跑 harness → **CP-05 再找你**
+CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 → 若改 schema，按 CP-02 计划执行 migration 链 → 若命中业务数据影响面，按计划做**只读**抽样对账并输出结论与问题（**禁止**改删业务数据）→ 跑 harness → **CP-05 再找你**
 
 ## 提交阶段预告（用户说「提交」后）
 
@@ -54,6 +54,7 @@ CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 → 
 ## 质量门禁
 
 - 修改数据库 schema 时，CP-02 必须设计 migration、应用环境、结构检查、依赖 API 冒烟与回滚
-- CP-05 前置验证顺序：未改 schema → `test:harness:ci`；修改 schema → 按 CP-02 已确认计划完成 migration prepare（生成或手写并检查）→ 应用至目标验收库 → 结构检查 → 针对性 API 冒烟 → `test:harness:ci`；项目默认命令见 `AGENTS.md`
-- 数据库变更链任一步缺失或失败时，立即停止后续验证（包括 harness），进入 CP-05 汇报并推荐 **Stop**，不得进入页面验收或提交
-- 每次 commit 前：Code Review（CP-06 · **`sdlc-review`**）；**必须输出审查结论**（可提交/有问题、质量、风险）
+- 命中业务数据影响面时，CP-02 必须设计**只读**抽样对账计划；CP-05 必须给出结论与问题清单；校验过程禁止 INSERT/UPDATE/DELETE 业务数据；修数另开任务并单独授权
+- CP-05 前置验证顺序：未改 schema →（若有数据影响则先只读对账）→ `test:harness:ci`；修改 schema → 按 CP-02 计划完成 migration prepare → 应用 → 结构检查 → API 冒烟 →（若有数据影响则只读对账）→ `test:harness:ci`
+- 数据库变更链或只读对账任一步**缺失/无法完成/核对写库**时，立即停止后续验证（含 harness），进入 CP-05 汇报并推荐 **Stop**；对账结论「有差异」但已给出问题清单**不是**步骤失败，仍须跑 harness，是否提交由 CP-05 判定
+- 每次 commit 前：Code Review（CP-06 · **`sdlc-review`**）；命中数据影响面时须核验对账证据；**必须输出审查结论**

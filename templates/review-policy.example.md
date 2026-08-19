@@ -17,3 +17,4 @@
 - （例：须遵守 Early Return；禁止 console.log）
 - （例：CEC102 模块禁止业务依赖）
 - Next.js：改写 middleware/proxy Response 时禁止 `text()` 后 `new Response(string)` 未拷贝 Content-Type；只改 Cookie 须透传 `response.body`；禁止与 `/api/auth` 双写会话 Cookie（见 `docs/code-review.md` §8）
+- 业务数据影响面：须有只读抽样对账的结论与问题清单；禁止以校验/对账名义 INSERT/UPDATE/DELETE 业务数据（见 `docs/code-review.md` §9）
