@@ -12,7 +12,7 @@ description: AI-SDLC 阶段3编码。CP-02 通过后 AI 预告「无需回复」
 ```markdown
 ✅ 已收到「开始实现」→ 进入 **阶段 3 · 编码实现**
 
-**接下来自动完成（无需你回复）：** 在已声明文件内改代码 → 若改 schema，按 CP-02 已确认计划执行 migration 生成检查 + 应用 + 结构检查 + 针对性 API 冒烟（项目默认命令见 `AGENTS.md`）→ 跑 test:harness:ci
+**接下来自动完成（无需你回复）：** 在已声明文件内改代码 → 若改 schema，按 CP-02 已确认计划执行 migration prepare（生成或手写并检查）+ 应用 + 结构检查 + 针对性 API 冒烟（项目默认命令见 `AGENTS.md`）→ 跑 test:harness:ci
 **预计下次需要你介入：** 验证完成后 **CP-05**
 ```
 

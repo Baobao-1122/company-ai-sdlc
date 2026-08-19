@@ -4,7 +4,7 @@
 > **策略：** 质量 → 安全 → 效率  
 > **受众：** Cursor Agent + 研发人员  
 > **配套：** [human-checkpoints.md](human-checkpoints.md) · [agent-active-guidance.md](agent-active-guidance.md)  
-> **最后更新：** 2026-07-27
+> **最后更新：** 2026-08-03
 
 ---
 
@@ -53,6 +53,7 @@ Agent 在 `⏸ CP-xx` 前**必须**按序输出：
 | 2 | 验收命令完整 | 含 `test:harness:ci` 及项目规定追加命令 | 缺 harness 或敏感路径未加 profile |
 | 3 | commit 可拆分 | 一 commit 一功能，类型不混 | feat+fix 混在一个 commit |
 | 4 | 文档同步已计划 | 行为/API 变更对应 docs | 改 API 未提 docs |
+| 5 | 数据库变更计划 | 不涉及数据库结构，或已列 migration prepare/apply、应用环境、验证与回滚方式 | 改 schema 但未计划 migration，或只准备文件而未计划应用验证 |
 
 ---
 
@@ -84,6 +85,7 @@ Agent 在 `⏸ CP-xx` 前**必须**按序输出：
 | 1 | Harness | `test:harness:ci`（或 AGENTS 规定命令）✅ | ❌ 或未跑 |
 | 2 | 改动与 CP-02 一致 | 未超范围 | 有未声明文件改动 |
 | 3 | 手动验收步骤 | Agent 已给出 | 缺失 |
+| 4 | 数据库结构一致性 | 不涉及数据库结构，或 migration 已纳入版本管理、应用至验收环境并通过结构检查与依赖 API 冒烟 | schema 已变更但无 migration，或 migration 仅准备未应用、验收库未更新、依赖 API 未验证 |
 
 ---
 
@@ -95,8 +97,9 @@ Agent 在 `⏸ CP-xx` 前**必须**按序输出：
 | 2 | 审查结论 | 总体 ✅ 或 ⚠️ 且你接受 | ❌ 建议先修 |
 | 3 | 代码质量 | 优/良 | 需改进且影响可维护性/安全 |
 | 4 | 风险等级 | 低/中且可说明 | 高 |
+| 5 | Next.js middleware/proxy 改写 Response（若 diff 命中） | 透传 `response.body` 且保留 `Content-Type`；无 auth Cookie 双写 | 读 body 重建为 string 且未拷贝 Content-Type；或 middleware 与 `/api/auth` 双写 |
 
-见 [code-review.md](code-review.md) 审查结论表。
+见 [code-review.md](code-review.md) 审查结论表与 **§8 Response 改写红线**。
 
 ---
 
@@ -191,4 +194,6 @@ Agent 在 `⏸ CP-xx` 前**必须**按序输出：
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-08-07 | v1.2 | CP-06 增加 middleware/proxy Response 改写红线判据 |
+| 2026-08-03 | v1.1 | CP-02/CP-05 增加数据库 migration 应用与运行时验证门禁 |
 | 2026-07-27 | v1.0 | 首版：决策包结构 + CP-01～10 通用判据 + 项目扩展机制 |
