@@ -3,7 +3,7 @@
 > **文档 ID：** `CODE-REVIEW-v1`  
 > **执行方式：** Cursor Bugbot / Security Review subagent（只读）  
 > **编排 Skill：** `sdlc-review`  
-> **最后更新：** 2026-07-17
+> **最后更新：** 2026-08-07
 
 ---
 
@@ -49,6 +49,8 @@ Agent 根据**本次待提交 diff** 自动选档，并在 Review 前告知你�
 |----------|------|
 | `**/api/**`、`app/api/**` | L2 |
 | `**/auth/**`、权限/RBAC 相关 | L2 |
+| `middleware.ts`、`proxy.ts`、`**/middleware/**` | L2 |
+| 改写 Response/Set-Cookie 的 auth 包装器（如 `**/adjust-*-cookies*.ts`） | L2 |
 | `.env*`、密钥、crypto | L2 |
 | 项目自定义（如 `lib/evcs/**`） | L2 |
 
@@ -64,6 +66,8 @@ Agent 根据**本次待提交 diff** 自动选档，并在 Review 前告知你�
 | Security | `review-security` | 同左，仅 L2 |
 
 **Custom Instructions（可选）：** 项目 AGENTS.md 中的审查关注点（如 CEC102 红线、RBAC 口径）。
+
+**Next.js 项目必加（命中 §3 middleware/proxy/auth Cookie 路径时）：** 禁止为改 Header/Cookie 而 `response.text()` 后再 `new Response(string)` 且未拷贝 `Content-Type`（默认 `text/plain` → 整页源码）；只改 Cookie 须透传 `response.body`；禁止 middleware 与 `/api/auth` 双写同一会话 Cookie。详见 §8 与 Rule `nextjs-middleware-response.mdc`。
 
 ---
 
@@ -117,9 +121,38 @@ Agent **必须**输出「审查结论」块，包含：
 
 ---
 
+## 8. Next.js Middleware / Proxy Response 改写红线（防回归）
+
+**事故形态：** middleware/proxy 为校正 Set-Cookie 等读取 `response.text()`，再 `new NextResponse(text)`；未带原 `Content-Type` 时默认 `text/plain`，浏览器把 HTML 显示成整页源码。
+
+### Review 必查（命中 §3 相关路径时）
+
+| # | 检查项 | 判定 |
+|---|--------|------|
+| 1 | 是否读 body 再重建 Response | 有 → 必须显式保留原 `Content-Type`（及必要编码头），否则 **High** |
+| 2 | 是否仅改 Header/Cookie | 应透传 `response.body` 流，禁止无必要缓冲 |
+| 3 | 是否丢失 `status` / 非 Cookie 头 | 丢失 → **High** |
+| 4 | auth Cookie：middleware 与 `/api/auth` 是否双写 | 双写 → **High**；matcher 应排除已处理路径 |
+| 5 | 单测 | 改写路径应断言页面响应仍为 `text/html`（或约定类型） |
+
+### 正确模式（摘要）
+
+```typescript
+return new Response(response.body, {
+  status: response.status,
+  statusText: response.statusText,
+  headers, // 已去掉/重写 set-cookie，其余头保留
+})
+```
+
+配套 Rule（接入项目后生效）：`.cursor/rules/nextjs-middleware-response.mdc`。
+
+---
+
 ## 变更记录
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-08-07 | v1.2 | 新增 §8 Middleware/Proxy Response 改写红线；L2 含 middleware/proxy |
 | 2026-07-17 | v1.1 | 强制 CP-06 审查结论：问题/质量/风险/明确 verdict |
 | 2026-07-17 | v1.0 | 每次 commit 必跑 Review |
