@@ -156,7 +156,7 @@ pnpm test:harness:ci               # 合并前
 | [docs/qa/ai-sdlc-decision-rubrics.md](docs/qa/ai-sdlc-decision-rubrics.md) | **CP 判断要点（Allow/Stop）** |
 | [docs/qa/ai-sdlc-code-review.md](docs/qa/ai-sdlc-code-review.md) | 每次 commit 前 Review |
 
-流程：**需求 → 设计 → 实现 → 验证 → （你要求时）提交**；提交前必跑 \`test:harness:ci\` + \`sdlc-review\`。
+流程：**需求 → 设计 → 实现 → 验证 → （你要求时）提交**；harness 后（若触发）**P1 Reflection**；提交前必跑 \`test:harness:ci\` + \`sdlc-review\`（**CP-06 Reflection**）。Agent 须在 P1/CP-06 前输出 \`🔄 Reflection\` 标题（见 code-review §11）。
 
 ## CP 判断扩展（项目特有，必填）
 

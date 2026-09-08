@@ -8,7 +8,7 @@
 |------|------|
 | [README.md](README.md) | 仓库概览与快速开始 |
 | [docs/workflow-overview.md](docs/workflow-overview.md) | 五层 AI 工作流架构 |
-| [docs/code-review.md](docs/code-review.md) | **每次 commit 前 Code Review（Bugbot）** |
+| [docs/code-review.md](docs/code-review.md) | **每次 commit 前 Code Review + P1 Reflection（Bugbot）** |
 | [docs/agent-active-guidance.md](docs/agent-active-guidance.md) | AI 主动引导 |
 | [docs/human-checkpoints.md](docs/human-checkpoints.md) | **人工确认暂停点 CP-01～CP-10** |
 | [docs/decision-rubrics.md](docs/decision-rubrics.md) | **CP 决策判据（Allow/Stop + 决策包）** |

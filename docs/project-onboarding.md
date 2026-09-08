@@ -205,8 +205,8 @@ Agent 接入已有仓库时，对照下表决定「保留什么、补什么」�
 |--------|------|------|----------|
 | P0（先执行） | `AGENTS.md` | 数据库项目先补 migration prepare/apply、结构检查与针对性 API 冒烟实际命令 | 合并进已有 **Agent 执行规程**；无该章节时才新建，不覆盖项目边界/启动命令 |
 | P0（原子同步） | `.cursor/rules/sdlc-workflow.mdc` | 对比 diff，合并数据库变更链与决策包段落 | 不删项目特有 Rule |
-| P0（原子同步） | `.cursor/skills/sdlc-design`、`sdlc-implement`、`sdlc-verify` | 对比 diff，合并数据库计划、执行与验证要求 | 不覆盖项目特有补充 |
-| P0（原子同步） | `docs/qa/ai-sdlc-decision-rubrics.md`、guidance、checkpoints | 复制或 diff 合并数据库门禁内容 | 项目扩展仍在 AGENTS §CP 判断扩展 |
+| P0（原子同步） | `.cursor/skills/sdlc-design`、`sdlc-implement`、`sdlc-verify`、**`sdlc-review`** | 对比 diff，合并数据库计划、P1/Reflection、验证与 Review 要求 | 不覆盖项目特有补充 |
+| P0（原子同步） | `docs/qa/ai-sdlc-decision-rubrics.md`、guidance、checkpoints、**`ai-sdlc-code-review.md`** | 复制或 diff 合并（含 §10 P1、§11 Reflection） | 项目扩展仍在 AGENTS §CP 判断扩展 |
 | P1 | 其他 `docs/qa/ai-sdlc-*.md`、Skill | 按需更新 | 跳过若项目有本地定制 |
 | P2 | `AGENTS.md` | 补 **§CP 判断扩展** 与 SDLC 文档链接 | **不覆盖**项目边界/启动命令 |
 
@@ -221,7 +221,7 @@ PROJECT_ROOT="/path/to/existing-project"
 mkdir -p "$PROJECT_ROOT/.cursor/rules" "$PROJECT_ROOT/.cursor/skills" "$PROJECT_ROOT/docs/qa"
 [[ -f "$PROJECT_ROOT/.cursor/rules/sdlc-workflow.mdc" ]] || \
   cp "$SDLC_ROOT/.cursor/rules/sdlc-workflow.mdc" "$PROJECT_ROOT/.cursor/rules/sdlc-workflow.mdc"
-for skill in sdlc-design sdlc-implement sdlc-verify; do
+for skill in sdlc-design sdlc-implement sdlc-verify sdlc-review; do
   [[ -d "$PROJECT_ROOT/.cursor/skills/$skill" ]] || \
     cp -R "$SDLC_ROOT/.cursor/skills/$skill" "$PROJECT_ROOT/.cursor/skills/$skill"
 done
@@ -231,6 +231,8 @@ done
   cp "$SDLC_ROOT/docs/agent-active-guidance.md" "$PROJECT_ROOT/docs/qa/ai-sdlc-agent-active-guidance.md"
 [[ -f "$PROJECT_ROOT/docs/qa/ai-sdlc-human-checkpoints.md" ]] || \
   cp "$SDLC_ROOT/docs/human-checkpoints.md" "$PROJECT_ROOT/docs/qa/ai-sdlc-human-checkpoints.md"
+[[ -f "$PROJECT_ROOT/docs/qa/ai-sdlc-code-review.md" ]] || \
+  cp "$SDLC_ROOT/docs/code-review.md" "$PROJECT_ROOT/docs/qa/ai-sdlc-code-review.md"
 
 # 3. 对比并合并以下原子组，禁止只更新其中一项：
 diff -u "$PROJECT_ROOT/.cursor/rules/sdlc-workflow.mdc" \
@@ -241,6 +243,10 @@ diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-implement/SKILL.md" \
   "$SDLC_ROOT/.cursor/skills/sdlc-implement/SKILL.md" || true
 diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-verify/SKILL.md" \
   "$SDLC_ROOT/.cursor/skills/sdlc-verify/SKILL.md" || true
+diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-review/SKILL.md" \
+  "$SDLC_ROOT/.cursor/skills/sdlc-review/SKILL.md" || true
+diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-code-review.md" \
+  "$SDLC_ROOT/docs/code-review.md" || true
 diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-decision-rubrics.md" \
   "$SDLC_ROOT/docs/decision-rubrics.md" || true
 diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-agent-active-guidance.md" \
@@ -490,6 +496,7 @@ done
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-09-08 | v2.5 | §3.5 升级同步含 sdlc-review、ai-sdlc-code-review §10–§11（P1 + Reflection） |
 | 2026-08-19 | v2.4 | 业务数据只读抽样对账门禁说明；对账命令可选登记、禁止校验写库 |
 | 2026-08-07 | v2.3 | F-17：Next.js middleware Response 红线 Rule；对齐 code-review §8 |
 | 2026-08-03 | v2.2 | 数据库项目接入时必须登记 migration、结构检查与 API 冒烟命令 |

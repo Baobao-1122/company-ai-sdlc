@@ -44,7 +44,17 @@ Agent 在 `⏸ CP-xx` 处输出 **决策包**：①目的 ②判断要点 ③自
 | [docs/qa/ai-sdlc-decision-rubrics.md](docs/qa/ai-sdlc-decision-rubrics.md) | 通用 Allow/Stop 判据 |
 | [docs/qa/ai-sdlc-code-review.md](docs/qa/ai-sdlc-code-review.md) | 每次 commit 前 Review |
 
-流程：**需求 → 设计 → 实现 → 验证 → 提交**；提交前必跑 `test:harness:ci` + `sdlc-review`。
+流程：**需求 → 设计 → 实现 → 验证 → 提交**；harness 后（若触发）**P1 Reflection**；提交前必跑 `test:harness:ci` + `sdlc-review`（**CP-06 Reflection**）。
+
+### Reflection 速查（v1.5+）
+
+| 你应看到 | 含义 |
+|----------|------|
+| `🔄 Reflection · P1 …` | harness 后早期互查，无需回复 |
+| `ℹ️ Reflection · P1 未触发` | 跳过 P1，正常进 CP-05 |
+| `🔄 Reflection · CP-06 …` | commit 前最后一轮互查，无需回复 |
+
+详见 [docs/qa/ai-sdlc-code-review.md](docs/qa/ai-sdlc-code-review.md) §11。
 
 ## CP 判断扩展
 

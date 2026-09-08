@@ -22,16 +22,25 @@ description: AI-SDLC 提交前 Code Review。每次 git commit 前必跑；编�
 ## 前置
 
 - 已跑或你接受跳过 `test:harness:ci`（见 sdlc-verify）
+- **P1 预 Review 已通过或未触发**（见 `docs/code-review.md` §10；P1 **不替代**本 Skill）
 - 工作区有待提交 diff；若为空 → L0 跳过，直接 CP-06 步骤 2
 
 ## 步骤 1 · 选档
 
-读项目 `AGENTS.md` §Code Review 路径表（无则用 `docs/code-review.md` §3）。
+读项目 `AGENTS.md` §Code Review 路径表（无则用 `docs/code-review.md` §3；业务项目 `docs/qa/ai-sdlc-code-review.md` §3）。
+
+**调用 subagent 前必须先发**（见 `docs/code-review.md` §11.2）：
 
 ```markdown
-📍 阶段 5/5 · 提交前 Code Review · 档位 L1/L2
+🔄 **Reflection · CP-06 · commit 前 Code Review（第 1 轮）**
 
-**接下来自动完成（无需你回复）：** 调用 Cursor Review subagent
+| 项 | 说明 |
+|----|------|
+| **本轮性质** | Reflection — 由 Bugbot [+ Security] 互查，**不是**继续写代码 |
+| **审查档位** | L1 / L2 |
+| **你需要做什么** | **无需回复**；完成后 **CP-06 步骤 1** 请你决定 |
+
+**接下来自动完成（无需回复）：** 调用 Cursor Review subagent
 **完成后：** CP-06 步骤 1 请你决定
 ```
 
@@ -61,10 +70,13 @@ Custom Instructions: <同上>
 
 **硬性：每次 Review 后必须给出明确结论**，禁止只贴原始 findings 或含糊「看一下」。
 
-主 Agent 在 Bugbot/Security 返回后，**必须**按下列结构汇总（可合并 subagent 结果，并补充代码质量与风险判断）：
+主 Agent 在 Bugbot/Security 返回后，**必须**按下列结构汇总（可合并 subagent 结果，并补充代码质量与风险判断）。
+
+**块首必须含：** `🔄 **Reflection · CP-06 · 完成**`（见 `docs/code-review.md` §11.3）
 
 ```markdown
-📍 阶段 5/5 · Code Review 完成 · **等待你对 Review 的决定**
+🔄 **Reflection · CP-06 · 完成**
+📍 阶段 5/5 · **等待你对 Reflection / Review 的决定**
 
 ---
 
@@ -138,7 +150,8 @@ Custom Instructions: <同上>
 - Review 发现问题后自动修（除非用户说「先修 review」）
 - 用主 Agent 自读 diff 代替 Bugbot
 - subagent 失败时不告知仍 commit（须 ⏭ 并请你选择）
+- **Reflection 轮次未用 🔄 标题告知用户**（见 `docs/code-review.md` §11）
 
 ## 参考
 
-`docs/code-review.md`（含 §8 Middleware Response 红线、§9 业务数据只读对账）· 判据见业务项目 `docs/qa/ai-sdlc-decision-rubrics.md` 或标准库 `docs/decision-rubrics.md` §3 CP-06 · `docs/human-checkpoints.md`
+`docs/code-review.md`（含 §8 Middleware Response 红线、§9 业务数据只读对账、§10 P1、§11 Reflection）· 判据见业务项目 `docs/qa/ai-sdlc-decision-rubrics.md` 或标准库 `docs/decision-rubrics.md` §3 CP-06 · `docs/human-checkpoints.md`
