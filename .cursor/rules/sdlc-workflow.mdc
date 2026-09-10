@@ -5,7 +5,13 @@ alwaysApply: true
 
 # AI-SDLC：AI 引导，人工在 CP 介入
 
-完整定义：`docs/agent-active-guidance.md` · `docs/human-checkpoints.md` · `docs/decision-rubrics.md` · `docs/code-review.md`
+完整定义：`docs/agent-active-guidance.md` · `docs/human-checkpoints.md` · `docs/decision-rubrics.md` · `docs/code-review.md` · `docs/task-state.md`
+
+## Task State（换 Chat 可续）
+
+- 业务项目任务实例：`.sdlc/task-state.yaml`（规范见 `docs/task-state.md`；读写 Skill **`sdlc-task-state`**）
+- **开发任务开场 / 新 Chat / 「续任务」**：Agent **必须先 Read** 已有 state（若存在）
+- **过 CP、过 harness/P1/CP-06**：Agent **必须 Update** state；**不新增** mandatory 人工步骤（CP 仍由人确认）
 
 ## 协作模型
 

@@ -22,6 +22,12 @@ description: AI-SDLC 阶段3编码。CP-02 通过后 AI 预告「无需回复」
 - 进行中：`📍 阶段 3/5 · 编码实现`
 - CP-03/04：必须用 **决策包**（业务项目 `docs/qa/ai-sdlc-decision-rubrics.md` §3 CP-03/04）+ 编号选项
 
+## Task State
+
+- 进入时 **Read** `.sdlc/task-state.yaml`；`cp.cp02` 须为 `passed`
+- 进入阶段 4 前 **Update**：`stage: verify`
+- 对账结论写入 `verify.reconcileDone`；阻塞写入 `blockers`
+
 ## 前置
 
 CP-02 已通过

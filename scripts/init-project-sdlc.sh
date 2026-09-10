@@ -78,7 +78,7 @@ copy_skills() {
 copy_sdlc_docs() {
   local dest="$1"
   mkdir -p "$dest/docs/qa"
-  for f in human-checkpoints.md agent-active-guidance.md code-review.md decision-rubrics.md; do
+  for f in human-checkpoints.md agent-active-guidance.md code-review.md decision-rubrics.md task-state.md; do
     local base="ai-sdlc-${f}"
     if [[ -f "$dest/docs/qa/$base" ]]; then
       warn "跳过已存在: docs/qa/$base"
@@ -270,9 +270,26 @@ log "目标项目: $PROJECT_PATH"
 log "项目名: $PROJECT_NAME"
 log "Harness slug: $PROJECT_SLUG"
 
+init_sdlc_task_state_dir() {
+  local dest="$1"
+  mkdir -p "$dest/.sdlc"
+  local tpl="$SDLC_ROOT/templates/task-state.template.yaml"
+  if [[ ! -f "$tpl" ]]; then
+    warn "未找到 task-state 模板，跳过 .sdlc/"
+    return
+  fi
+  if [[ -f "$dest/.sdlc/task-state.yaml" ]]; then
+    warn "跳过已存在: .sdlc/task-state.yaml"
+    return
+  fi
+  cp "$tpl" "$dest/.sdlc/task-state.yaml"
+  log "已复制: .sdlc/task-state.yaml（模板，首个任务前由 Agent 填写）"
+}
+
 copy_rules "$PROJECT_PATH"
 copy_skills "$PROJECT_PATH"
 copy_sdlc_docs "$PROJECT_PATH"
+init_sdlc_task_state_dir "$PROJECT_PATH"
 generate_agents_md "$PROJECT_PATH"
 generate_prd "$PROJECT_PATH"
 generate_harness "$PROJECT_PATH"

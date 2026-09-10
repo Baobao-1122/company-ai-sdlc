@@ -65,6 +65,9 @@
 | F-09 | `.cursor/skills/sdlc-implement/` | 推荐 | 实现阶段 Skill | 从标准库复制 |
 | F-10 | `.cursor/skills/sdlc-verify/` | 推荐 | 验证阶段 Skill | 从标准库复制 |
 | F-11 | `.cursor/skills/sdlc-review/` | ✅ | **每次 commit 前 Code Review** | 从标准库复制 |
+| F-11b | `.cursor/skills/sdlc-task-state/` | 推荐 | 任务状态读写（换 Chat 可续） | 从标准库复制 |
+| F-11c | `docs/qa/ai-sdlc-task-state.md` | 推荐 | Task State 规范（sync 自标准库） | 从标准库复制 |
+| F-11d | `.sdlc/task-state.yaml` | 推荐 | 当前 feat 任务实例（模板可空） | init 脚本或首个任务 Create |
 | F-12 | `harness.config.ts` | ✅ | 质量门禁 layers | 创建或保留已有 |
 | F-13 | `package.json` → `scripts.test:harness:ci` | ✅ | 合并前必跑命令 | 追加缺失 script |
 | F-14 | 项目特有 Rule（可选） | 可选 | 如 `auth-rbac.mdc` | 保留已有，不删 |

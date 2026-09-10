@@ -11,6 +11,11 @@ description: AI-SDLC 阶段2设计拆分。CP-01 通过后输出设计，CP-02 �
 - 回复开头：`📍 阶段 2/5 · 设计拆分`
 - 结束：**CP-02 决策包**（判据：业务项目 `docs/qa/ai-sdlc-decision-rubrics.md` §3 CP-02；标准库 `docs/decision-rubrics.md`）
 
+## Task State
+
+- 进入时 **Read** `.sdlc/task-state.yaml`；`cp.cp01` 须为 `passed` 或 `skipped`
+- 用户 CP-02「开始实现」后 **Update**：`cp.cp02: passed`，`stage: implement`
+
 ## 前置
 
 CP-01 已通过，或用户明确需求已确认

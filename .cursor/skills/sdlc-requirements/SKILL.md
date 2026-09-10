@@ -10,9 +10,15 @@ description: AI-SDLC 阶段1需求对齐。输出对齐表后在 CP-01 暂停，
 - 回复开头：`📍 阶段 1/5 · 需求对齐`
 - 结束：**CP-01 决策包**（五块；判据见 `docs/decision-rubrics.md` §2～§3 CP-01，业务项目见 `docs/qa/ai-sdlc-decision-rubrics.md`）
 
+## Task State
+
+- 开场 **Read** Skill **`sdlc-task-state`**；若 `.sdlc/task-state.yaml` 已存在且非本任务 → 先与人确认是否覆盖
+- 输出对齐表后 **Create** `.sdlc/task-state.yaml`（从 `templates/task-state.template.yaml`），填入 `taskId`、`branch`、`scope`、`acceptance`
+- 用户 CP-01「确认」后 **Update**：`cp.cp01: passed`，`stage: design`
+
 ## 执行步骤
 
-1. 读 `AGENTS.md`（含 §CP 判断扩展）与 PRD
+1. Read **`sdlc-task-state`**；读 `AGENTS.md`（含 §CP 判断扩展）与 PRD
 2. 只对齐**一条**需求
 3. 输出对齐表 + CP-01 决策包，**停止**
 

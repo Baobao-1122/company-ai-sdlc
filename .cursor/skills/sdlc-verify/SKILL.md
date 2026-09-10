@@ -5,6 +5,12 @@ description: AI-SDLC 阶段4验证。跑 harness 后在 CP-05 输出决策包；
 
 # SDLC 阶段 4：验证 + CP-05
 
+## Task State
+
+- 开头 **Read** `.sdlc/task-state.yaml`；`stage` 应为 `verify`
+- harness / P1 audit / P1 Reflection / CP-05 后按 **`sdlc-task-state`** 更新 `verify.*`、`reflection.p1`
+- 用户 CP-05 指示后 **Update**：`cp.cp05: passed`；若说「提交」则 `stage: submit`
+
 ## AI 引导职责
 
 - 开头：`📍 阶段 4/5 · 验证门禁` → 完成后 `📍 阶段 4/5 · 验证完成 · 等待你的指示`

@@ -13,6 +13,7 @@
 | [docs/human-checkpoints.md](docs/human-checkpoints.md) | **人工确认暂停点 CP-01～CP-10** |
 | [docs/decision-rubrics.md](docs/decision-rubrics.md) | **CP 决策判据（Allow/Stop + 决策包）** |
 | [docs/project-onboarding.md](docs/project-onboarding.md) | **业务项目接入（AI 可执行版，新/已有）** |
+| [docs/task-state.md](docs/task-state.md) | **任务状态 schema（换 Chat 可续）** |
 | [docs/stages/](docs/stages/) | 各 SDLC 阶段操作说明 |
 
 ## 仓库边界
@@ -30,7 +31,8 @@
 | `docs/decision-rubrics.md` | 通用 CP 判据 |
 | `templates/harness.config.example.ts` | Harness 门禁模板 |
 | `.cursor/rules/` | 公司通用 Rule（复制到业务项目） |
-| `.cursor/skills/sdlc-*` | SDLC 阶段 Skill |
+| `.cursor/skills/sdlc-*` | SDLC 阶段 Skill（含 `sdlc-task-state`） |
+| `templates/task-state.template.yaml` | 业务项目 `.sdlc/task-state.yaml` 模板 |
 | `scripts/init-project-sdlc.sh` | 项目一键接入 |
 
 ## Agent 在本仓库的执行规程

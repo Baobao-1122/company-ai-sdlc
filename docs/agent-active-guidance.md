@@ -39,6 +39,8 @@ AI：宣布阶段 → 执行 → 到达 CP → 主动提问 + 给出回复选项
 
 **小改动例外：** 用户明确说「小改动 / 一行 fix / 改 typo」→ 可跳过 CP-01，但仍须在 **CP-05** 停。
 
+**Task State：** 开发任务须维护 `.sdlc/task-state.yaml`（见 [task-state.md](task-state.md)）。**新 Chat** 或用户说「续任务」时，Agent **第一句 Read state** 并汇报断点；**不新增** mandatory 人工步骤。
+
 ---
 
 ## 3. 阶段进度条（每条回复开头）

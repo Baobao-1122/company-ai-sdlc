@@ -43,8 +43,11 @@ Agent 在 `⏸ CP-xx` 处输出 **决策包**：①目的 ②判断要点 ③自
 | [docs/qa/ai-sdlc-human-checkpoints.md](docs/qa/ai-sdlc-human-checkpoints.md) | CP 何时停 |
 | [docs/qa/ai-sdlc-decision-rubrics.md](docs/qa/ai-sdlc-decision-rubrics.md) | 通用 Allow/Stop 判据 |
 | [docs/qa/ai-sdlc-code-review.md](docs/qa/ai-sdlc-code-review.md) | 每次 commit 前 Review |
+| [docs/qa/ai-sdlc-task-state.md](docs/qa/ai-sdlc-task-state.md) | 任务状态（换 Chat 可续） |
 
 流程：**需求 → 设计 → 实现 → 验证 → 提交**；harness 后（若触发）**P1 Reflection**；提交前必跑 `test:harness:ci` + `sdlc-review`（**CP-06 Reflection**）。
+
+**Task State：** 当前 feat 进度写入 `.sdlc/task-state.yaml`（Agent 自动维护）；新 Chat 说「续任务」或 Agent 自动 Read 恢复。
 
 ### Reflection 速查（v1.5+）
 

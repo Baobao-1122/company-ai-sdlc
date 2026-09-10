@@ -1,0 +1,58 @@
+# AI-SDLC 任务状态实例模板（复制到业务项目 .sdlc/task-state.yaml 后填写）
+# 规范：docs/task-state.md · 读写 Skill：.cursor/skills/sdlc-task-state/
+
+schemaVersion: 1
+
+# 任务标识（slug，建议与 feat 分支主题一致）
+taskId: ""
+
+# 当前 Git 分支（Agent 创建/恢复时从 git branch --show-current 填入）
+branch: ""
+
+# 当前 SDLC 阶段
+# requirements | design | implement | verify | submit | done | paused
+stage: requirements
+
+# 需求范围（一句话 + 可选条目）
+scope: ""
+acceptance: []
+#  - "验收条目 1"
+
+# 人工卡点（pending | passed | skipped）
+# skipped：小改动跳过 CP-01 等场景，须在 notes 写明理由
+cp:
+  cp01: pending
+  cp02: pending
+  cp05: pending
+  cp06: pending
+
+# 验证门禁（Agent 在阶段 4 更新；未到时保持 null/false）
+verify:
+  schemaChanged: false
+  dataImpact: false
+  reconcileDone: null # null | skipped | passed | failed
+  harnessCommand: "" # 如 pnpm test:harness:ci
+  harnessPass: null # null | true | false
+  p1Audit: null # guard:sdlc-p1-trigger-audit 输出摘要或 P1_REQUIRED 结论
+  p1Review: pending # pending | skipped | passed | failed
+
+# Reflection 结论摘要（非完整 Bugbot 日志）
+reflection:
+  p1:
+    triggered: null # null | true | false
+    conclusion: null # ok | warn | block | skipped
+  cp06:
+    triggered: null
+    conclusion: null
+
+# 阻塞项（非空时 Agent 推荐 Stop，不得默认提交）
+blockers: []
+
+# 自由备注（断点续做关键信息、已合 commit、待办）
+notes: ""
+
+# 项目扩展（各业务项目在 AGENTS.md 约定键名，勿改 schema 核心字段）
+extensions: {}
+
+updatedAt: ""
+updatedBy: agent # agent | human

@@ -5,6 +5,11 @@ description: AI-SDLC 提交前 Code Review。每次 git commit 前必跑；编�
 
 # SDLC · 每次 Commit 前 Code Review
 
+## Task State
+
+- 进入时 **Read** `.sdlc/task-state.yaml`；`stage` 应为 `submit` 或 `verify` 且用户已说「提交」
+- CP-06 Reflection 完成后 **Update** `reflection.cp06`；commit 成功后 **Update** `cp.cp06: passed`，`stage: done`
+
 ## 硬性规则
 
 **任何 `git commit` 之前必须执行本 Skill。** 先 Review，后 commit；禁止跳过。

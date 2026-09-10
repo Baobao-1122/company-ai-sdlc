@@ -41,6 +41,7 @@
 | 4 质量门禁 | `harness.config.ts` | 合并前 `test:harness:ci` |
 | 4b P1 预 Review | `sdlc-verify` + Bugbot | harness 后、CP-05 前（若触发）· **Reflection** |
 | 4c Code Review | `sdlc-review` + Cursor Bugbot | **每次 commit 前** · **Reflection** |
+| 4d Task State | `sdlc-task-state` + `.sdlc/task-state.yaml` | **换 Chat 可续**；实例在业务项目 |
 | 5 自动化（可选） | Cursor Automations | PR 触发、定时巡检 |
 
 详细说明：[docs/workflow-overview.md](docs/workflow-overview.md) · **AI 主动引导**：[docs/agent-active-guidance.md](docs/agent-active-guidance.md) · **暂停点**：[docs/human-checkpoints.md](docs/human-checkpoints.md) · **决策判据**：[docs/decision-rubrics.md](docs/decision-rubrics.md)
