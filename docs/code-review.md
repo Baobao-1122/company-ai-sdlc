@@ -18,14 +18,15 @@ test:harness:ci 通过（或你接受 ⏭ 原因）
   → P1 预 Review（若命中 §10.2 触发器 — harness 之后、CP-05 之前）
   → ⏸ CP-05 汇报（须含 P1 结论或「未触发」说明）
   → 你说「提交」
-  → sdlc-review（Bugbot [+ Security] — CP-06 Reflection）
+  → **pnpm guard:sdlc-commit-rules**（激活 `.cursor/rules` + 项目已有 guard，见 [commit-rules-audit.md](./commit-rules-audit.md)）
+  → sdlc-review（Bugbot [+ Security] — CP-06 Reflection；Instructions 含 applicable_rules）
   → ⏸ CP-06 步骤 1：Review 结果，等你决定
   → 展示 commit 拆分与 message
   → ⏸ CP-06 步骤 2：等你「确认提交」
   → git commit
 ```
 
-**禁止：** 跳过 Review 直接 commit；Review 与实现同一轮自审代替 Bugbot；**静默跑 Bugbot 而不标注 `🔄 Reflection`**（见 §11）。
+**禁止：** 跳过 `guard:sdlc-commit-rules`（业务项目已接入时）或 Review 直接 commit；Review 与实现同一轮自审代替 Bugbot；**静默跑 Bugbot 而不标注 `🔄 Reflection`**（见 §11）。
 
 ---
 
@@ -67,7 +68,7 @@ Agent 根据**本次待提交 diff** 自动选档，并在 Review 前告知你�
 | Bugbot | `review-bugbot`（Cursor 内置） | `uncommitted changes`（每次 commit 前） |
 | Security | `review-security` | 同左，仅 L2 |
 
-**Custom Instructions（可选）：** 项目 AGENTS.md 中的审查关注点（如 CEC102 红线、RBAC 口径）。
+**Custom Instructions（必填项由项目定义）：** 项目 AGENTS.md 中的审查关注点（如 CEC102 红线、RBAC 口径）；**须包含** `guard:sdlc-commit-rules` 终端输出的 `applicable_rules` 对应 `.cursor/rules` / 专项 docs（见 [commit-rules-audit.md](./commit-rules-audit.md)）。
 
 **Next.js 项目必加（命中 §3 middleware/proxy/auth Cookie 路径时）：** 禁止为改 Header/Cookie 而 `response.text()` 后再 `new Response(string)` 且未拷贝 `Content-Type`（默认 `text/plain` → 整页源码）；只改 Cookie 须透传 `response.body`；禁止 middleware 与 `/api/auth` 双写同一会话 Cookie。详见 §8 与 Rule `nextjs-middleware-response.mdc`。
 
@@ -323,6 +324,7 @@ CP-06 沿用 `sdlc-review` 的「审查结论」表，但块首须加：
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-09-15 | v1.6 | §1 增加 CP-06 `guard:sdlc-commit-rules`；§4 Custom Instructions 须含 applicable_rules |
 | 2026-09-08 | v1.5 | 新增 §11 Reflection 用户可见标识（硬性）；§10 P1 预 Review |
 | 2026-08-07 | v1.2 | 新增 §8 Middleware/Proxy Response 改写红线；L2 含 middleware/proxy |
 | 2026-07-17 | v1.1 | 强制 CP-06 审查结论：问题/质量/风险/明确 verdict |
