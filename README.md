@@ -40,6 +40,7 @@
 | 3 项目 Rule | `.cursor/rules/*.mdc` | 编码规范、提交规范、文档同步 |
 | 4 质量门禁 | `harness.config.ts` | 合并前 `test:harness:ci` |
 | 4b P1 预 Review | `sdlc-verify` + Bugbot | harness 后、CP-05 前（若触发）· **Reflection** |
+| 4c Rules 激活 | `guard:sdlc-commit-rules` | **CP-06** · 按 diff 列出 applicable_rules + 补跑 guard（见 [commit-rules-audit.md](docs/commit-rules-audit.md)） |
 | 4c Code Review | `sdlc-review` + Cursor Bugbot | **每次 commit 前** · **Reflection** |
 | 4d Task State | `sdlc-task-state` + `.sdlc/task-state.yaml` | **换 Chat 可续**；实例在业务项目 |
 | 5 自动化（可选） | Cursor Automations | PR 触发、定时巡检 |
@@ -56,11 +57,14 @@ company-ai-sdlc/
 │   ├── workflow-overview.md  # 工作流总览
 │   ├── project-onboarding.md # 项目接入指南
 │   ├── decision-rubrics.md   # CP 决策判据（通用）
+│   ├── commit-rules-audit.md # CP-06 Rules + guard 激活
 │   └── stages/               # 各阶段操作说明
 ├── templates/                # 可复制到业务项目的模板
 │   ├── AGENTS.md.template
 │   ├── decision-rubrics-project.template.md
 │   ├── harness.config.example.ts
+│   ├── check-sdlc-commit-rules.example.mjs
+│   ├── sdlc-worktree-files.example.mjs
 │   └── docs/prd.template.md
 ├── .cursor/
 │   ├── rules/                # 公司通用 Rule（复制到业务项目）

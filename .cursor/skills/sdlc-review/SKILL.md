@@ -30,6 +30,21 @@ description: AI-SDLC 提交前 Code Review。每次 git commit 前必跑；编�
 - **P1 预 Review 已通过或未触发**（见 `docs/code-review.md` §10；P1 **不替代**本 Skill）
 - 工作区有待提交 diff；若为空 → L0 跳过，直接 CP-06 步骤 2
 
+## 步骤 0 · 激活已有 Rules + Guard（CP-06 硬性）
+
+**在 Bugbot 之前**运行（不重写规范，只执行仓库已有检测）：
+
+```bash
+pnpm guard:sdlc-commit-rules
+```
+
+- **PASS**：将终端里的 `applicable_rules` 列表并入下方 Bugbot Custom Instructions（见 `docs/commit-rules-audit.md`；业务项目可在 `docs/qa/sdlc-commit-rules.md` 做索引）。
+- **FAIL**：先修 `diff_scoped_violations` / guard 失败项，**禁止 commit**；修完后重跑本命令再进步骤 1。
+
+若本轮刚跑过 `test:harness:ci` 且 L4 已全部绿，本 guard 仍会按 diff **补跑**必要 guard 与 diff 规则扫描（见脚本输出 `guards_to_run`）。
+
+未接入 `guard:sdlc-commit-rules` 的项目：按 [commit-rules-audit.md](../../docs/commit-rules-audit.md) §4 接入后再强制本步骤。
+
 ## 步骤 1 · 选档
 
 读项目 `AGENTS.md` §Code Review 路径表（无则用 `docs/code-review.md` §3；业务项目 `docs/qa/ai-sdlc-code-review.md` §3）。
@@ -56,7 +71,7 @@ description: AI-SDLC 提交前 Code Review。每次 git commit 前必跑；编�
 ```text
 Full Repository Path: <项目绝对路径>
 Diff: uncommitted changes
-Custom Instructions: <项目 AGENTS.md 中的审查关注点；若 diff 含 middleware/proxy/auth Cookie 改写，必须追加：禁止读 body 再 new Response(string) 未拷贝 Content-Type；透传 response.body；禁止与 /api/auth 双写会话 Cookie；若本次命中业务数据影响面，必须追加：须有只读对账结论与问题清单；禁止以校验名义写库/删库>
+Custom Instructions: <项目 AGENTS.md 中的审查关注点；须包含 guard:sdlc-commit-rules 输出的 applicable_rules 对应 .cursor/rules；若 diff 含 middleware/proxy/auth Cookie 改写，必须追加：禁止读 body 再 new Response(string) 未拷贝 Content-Type；透传 response.body；禁止与 /api/auth 双写会话 Cookie；若本次命中业务数据影响面，必须追加：须有只读对账结论与问题清单；禁止以校验名义写库/删库>
 ```
 
 按 `review-bugbot` Skill 处理失败重试与结果汇总。

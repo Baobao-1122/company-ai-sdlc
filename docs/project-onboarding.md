@@ -211,6 +211,7 @@ Agent 接入已有仓库时，对照下表决定「保留什么、补什么」�
 | P0（原子同步） | `.cursor/skills/sdlc-design`、`sdlc-implement`、`sdlc-verify`、**`sdlc-review`** | 对比 diff，合并数据库计划、P1/Reflection、验证与 Review 要求 | 不覆盖项目特有补充 |
 | P0（原子同步） | `docs/qa/ai-sdlc-decision-rubrics.md`、guidance、checkpoints、**`ai-sdlc-code-review.md`** | 复制或 diff 合并（含 §10 P1、§11 Reflection） | 项目扩展仍在 AGENTS §CP 判断扩展 |
 | P1 | 其他 `docs/qa/ai-sdlc-*.md`、Skill | 按需更新 | 跳过若项目有本地定制 |
+| P1 | **`docs/commit-rules-audit.md`**、`templates/check-sdlc-commit-rules.example.mjs` | 业务项目复制脚本并注册 `guard:sdlc-commit-rules`；`docs/qa/sdlc-commit-rules.md` 索引 | 不覆盖已落地的项目 guard 映射 |
 | P2 | `AGENTS.md` | 补 **§CP 判断扩展** 与 SDLC 文档链接 | **不覆盖**项目边界/启动命令 |
 
 数据库项目升级必须先完成首行的命令登记与 V5 核验，再将三项“P0（原子同步）”一起完成；任一项缺失都应停止升级，不得留下无法执行或定义不完整的强制门禁。
@@ -499,6 +500,7 @@ done
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-09-15 | v2.6 | CP-06 `guard:sdlc-commit-rules` 与 commit-rules-audit 模板 |
 | 2026-09-08 | v2.5 | §3.5 升级同步含 sdlc-review、ai-sdlc-code-review §10–§11（P1 + Reflection） |
 | 2026-08-19 | v2.4 | 业务数据只读抽样对账门禁说明；对账命令可选登记、禁止校验写库 |
 | 2026-08-07 | v2.3 | F-17：Next.js middleware Response 红线 Rule；对齐 code-review §8 |

@@ -44,7 +44,7 @@ CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 → 
 
 ## 提交阶段预告（用户说「提交」后）
 
-**接下来自动完成（无需回复）：** 先发 **`🔄 Reflection · CP-06`** → 调用 **sdlc-review**（Bugbot [+ Security]）→ **`🔄 Reflection · CP-06 · 完成`**
+**接下来自动完成（无需回复）：** 若项目已接入则先 **`pnpm guard:sdlc-commit-rules`** → 先发 **`🔄 Reflection · CP-06`** → 调用 **sdlc-review**（Bugbot [+ Security]）→ **`🔄 Reflection · CP-06 · 完成`**
 
 **然后 CP-06 步骤 1/2 找你** — 每次 commit 必跑，禁止跳过
 
@@ -75,4 +75,4 @@ CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 → 
 - 命中业务数据影响面时，CP-02 必须设计**只读**抽样对账计划；CP-05 必须给出结论与问题清单；校验过程禁止 INSERT/UPDATE/DELETE 业务数据；修数另开任务并单独授权
 - CP-05 前置验证顺序：未改 schema →（若有数据影响则先只读对账）→ `test:harness:ci` →（若命中 P1）**Reflection · P1**；修改 schema → 按 CP-02 计划完成 migration prepare → 应用 → 结构检查 → API 冒烟 →（若有数据影响则只读对账）→ `test:harness:ci` →（若命中 P1）**Reflection · P1**
 - 数据库变更链或只读对账任一步**缺失/无法完成/核对写库**时，立即停止后续验证（含 harness），进入 CP-05 汇报并推荐 **Stop**；对账结论「有差异」但已给出问题清单**不是**步骤失败，仍须跑 harness，是否提交由 CP-05 判定
-- 每次 commit 前：Code Review（CP-06 · **`sdlc-review`**）；命中数据影响面时须核验对账证据；**必须输出审查结论**
+- 每次 commit 前：**`guard:sdlc-commit-rules`**（已接入项目）+ Code Review（CP-06 · **`sdlc-review`**）；命中数据影响面时须核验对账证据；**必须输出审查结论**
