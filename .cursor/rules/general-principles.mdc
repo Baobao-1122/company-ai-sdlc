@@ -7,9 +7,31 @@ alwaysApply: true
 
 AI 在编写或修改代码时必须严格遵守。
 
-## 圈复杂度控制
+## 圈复杂度与函数规模
 
 单个函数/方法的圈复杂度不得超过 **10**。超过时必须拆分为多个具名函数。
+
+**不以「单函数 50 行」作为公司硬指标**（商业化平台常有线性较长的 handler）；可选在项目 eslint 中设置 `max-lines-per-function`（建议 80～100）配合本条的复杂度约束。
+
+## TypeScript 类型
+
+- 禁止 `any`；确需逃逸时使用 `unknown` 并做类型收窄，须在 CP-06 说明理由
+- 须通过项目 **L4 lint**（如 `@typescript-eslint/no-explicit-any`: error）
+
+## 异常处理
+
+- 禁止空 `catch`（如 `catch {}`）；须用项目 logger 记录或 rethrow，禁止静默吞错
+- 须通过 lint（如 `no-empty` / 相关 TS 规则）
+
+## 副作用与可变入参
+
+- 默认不 mutate 函数入参；必须修改时须在命名或职责上明确（如 `applyPatch`）
+- 纯计算/校验函数应避免修改全局状态
+
+## 外部 npm 依赖
+
+- 禁止为小事引入大体积或低维护库；优先现有技术栈
+- **禁止**在未过 **CP-02 已列依赖且用户「开始实现」** 或 **CP-03「确认安装」** 前执行 `pnpm add` / `npm install <pkg>` / 修改 `package.json` 增加生产依赖
 
 ## Early Return 原则
 
