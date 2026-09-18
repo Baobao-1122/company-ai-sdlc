@@ -70,6 +70,8 @@ Agent 根据**本次待提交 diff** 自动选档，并在 Review 前告知你�
 
 **Custom Instructions（必填项由项目定义）：** 项目 AGENTS.md 中的审查关注点（如 CEC102 红线、RBAC 口径）；**须包含** `guard:sdlc-commit-rules` 终端输出的 `applicable_rules` 对应 `.cursor/rules` / 专项 docs（见 [commit-rules-audit.md](./commit-rules-audit.md)）。
 
+**Security Review 默认追加（L2）：** 对照 Rule `security-baseline.mdc`（SQL 参数化、日志脱敏、服务端权限/计价、Zod 边界）与 **`data-redlines.mdc`**（**禁止** diff 或脚本对**生产库**写操作；对账/reconcile 须只读）。
+
 **Next.js 项目必加（命中 §3 middleware/proxy/auth Cookie 路径时）：** 禁止为改 Header/Cookie 而 `response.text()` 后再 `new Response(string)` 且未拷贝 `Content-Type`（默认 `text/plain` → 整页源码）；只改 Cookie 须透传 `response.body`；禁止 middleware 与 `/api/auth` 双写同一会话 Cookie。详见 §8 与 Rule `nextjs-middleware-response.mdc`。
 
 ---
@@ -324,6 +326,7 @@ CP-06 沿用 `sdlc-review` 的「审查结论」表，但块首须加：
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-09-18 | v1.7 | §4 Security 默认对照 data-redlines / security-baseline |
 | 2026-09-15 | v1.6 | §1 增加 CP-06 `guard:sdlc-commit-rules`；§4 Custom Instructions 须含 applicable_rules |
 | 2026-09-08 | v1.5 | 新增 §11 Reflection 用户可见标识（硬性）；§10 P1 预 Review |
 | 2026-08-07 | v1.2 | 新增 §8 Middleware/Proxy Response 改写红线；L2 含 middleware/proxy |

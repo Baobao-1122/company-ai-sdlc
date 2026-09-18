@@ -31,6 +31,8 @@
 | `docs/decision-rubrics.md` | 通用 CP 判据 |
 | `templates/harness.config.example.ts` | Harness 门禁模板 |
 | `.cursor/rules/` | 公司通用 Rule（复制到业务项目） |
+| `.cursor/rules/data-redlines.mdc` | **数据红线**（含禁止擅自写生产库） |
+| `.cursor/rules/security-baseline.mdc` | Web 安全基线 |
 | `.cursor/skills/sdlc-*` | SDLC 阶段 Skill（含 `sdlc-task-state`） |
 | `templates/task-state.template.yaml` | 业务项目 `.sdlc/task-state.yaml` 模板 |
 | `scripts/init-project-sdlc.sh` | 项目一键接入 |

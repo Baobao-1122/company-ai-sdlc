@@ -1,0 +1,32 @@
+---
+description: Web 安全基线：SQL、日志、服务端校验、API 边界（始终生效）
+alwaysApply: true
+---
+
+# 安全基线（Web 项目）
+
+与 **数据红线** Rule `data-redlines.mdc` 并列；**生产库写操作**以数据红线为准。
+
+## 数据访问
+
+- **禁止**字符串拼接 SQL 或 raw 查询插值；使用 ORM / Query Builder **参数化**（Drizzle 等）
+- **禁止**在 `sql` 模板中拼接未参数化的用户输入
+
+## 日志
+
+- **禁止**在日志中输出密码、token、完整 session cookie、私钥、卡号等敏感字段
+- 须脱敏或使用项目约定 logger
+
+## 业务逻辑与权限
+
+- **权限、计价、额度、订单状态变更、持久化** 须在 **服务端**（API route / Server Action / service）校验与执行
+- 前端仅做展示与**预校验**（格式、必填），不得作为唯一授权或计价依据
+
+## API 输入
+
+- **禁止**未校验直接使用 `req.body` / 查询参数进入业务逻辑
+- 须用 Zod（或项目等价 schema）在边界 parse；细节见用户 Skill `web-api-route-standard`
+
+## Review
+
+- diff 命中 `app/api/**`、auth、middleware 等 → Code Review **L2 + Security**（见 `docs/code-review.md` §3）

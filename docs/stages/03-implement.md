@@ -14,7 +14,7 @@
    - 前端请求 → `web-api-fetch-standard`
    - 组件 → `web-component-design-standard`
    - 数据库 → `web-db-design-standard`
-3. 遵守 `.cursor/rules/general-principles.mdc`（含禁止 `any`、空 catch、未经 CP 不得 `pnpm add`）
+3. 遵守 `.cursor/rules/general-principles.mdc`、`security-baseline.mdc`、`data-redlines.mdc`
 4. 改 docs 若行为/接口变更（见 `docs-sync.mdc`）
 5. 完成后进入 [04-verify](04-verify.md)，不自动 commit
 
@@ -24,6 +24,7 @@
 - 引入 `console.log` 到提交代码
 - 单文件超过 300 行仍继续堆逻辑（应拆分）；函数规模以**圈复杂度 ≤10** 为准（非 50 行硬线）
 - **未经 CP-02 已列依赖 +「开始实现」，或 CP-03「确认安装」，执行 `pnpm add` / 新增生产依赖**
+- **对生产环境数据库执行写操作**（须 CP-10；见 `data-redlines.mdc`）
 
 ## 与用户协作
 
