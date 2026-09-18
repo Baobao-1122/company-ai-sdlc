@@ -71,7 +71,7 @@ pnpm guard:sdlc-commit-rules
 ```text
 Full Repository Path: <项目绝对路径>
 Diff: uncommitted changes
-Custom Instructions: <项目 AGENTS.md 中的审查关注点；须包含 guard:sdlc-commit-rules 输出的 applicable_rules 对应 .cursor/rules；若 diff 含 middleware/proxy/auth Cookie 改写，必须追加：禁止读 body 再 new Response(string) 未拷贝 Content-Type；透传 response.body；禁止与 /api/auth 双写会话 Cookie；若本次命中业务数据影响面，必须追加：须有只读对账结论与问题清单；禁止以校验名义写库/删库>
+Custom Instructions: <项目 AGENTS.md 中的审查关注点；须包含 guard:sdlc-commit-rules 输出的 applicable_rules 对应 .cursor/rules；须对照 security-baseline.mdc 与 data-redlines.mdc（禁止生产库写、SQL 拼接、日志敏感信息、未校验 body）；若 diff 含 middleware/proxy/auth Cookie 改写，必须追加：禁止读 body 再 new Response(string) 未拷贝 Content-Type；透传 response.body；禁止与 /api/auth 双写会话 Cookie；若本次命中业务数据影响面，必须追加：须有只读对账结论与问题清单；禁止以校验名义写库/删库>
 ```
 
 按 `review-bugbot` Skill 处理失败重试与结果汇总。
