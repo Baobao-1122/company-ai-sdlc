@@ -12,7 +12,7 @@ alwaysApply: true
 | 产品范围/验收标准 | `docs/prd.md` |
 | API 路径/参数/响应 | `docs/*-api.md` 或 OpenAPI |
 | 目录/代码规范 | `docs/dev-standard.md` |
-| 部署/环境变量 | `docs/deploy.md` |
+| 部署/环境变量 | `docs/deploy.md` 及项目 `.env*.example`（若有） |
 | 测试/Harness 约定 | `docs/testing.md` |
 | Agent 执行规程 | `AGENTS.md` |
 
