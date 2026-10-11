@@ -52,6 +52,11 @@ blockers: []
 notes: ""
 
 # 项目扩展（各业务项目在 AGENTS.md 约定键名，勿改 schema 核心字段）
+# 架构审查未触发可省略。触发后见 Skill sdlc-architecture：
+# architectureReview:
+#   required: true
+#   reason: ""
+#   status: pending_confirm # not_required | pending_confirm | changes_requested | revising | reviewed | waived
 extensions: {}
 
 updatedAt: ""

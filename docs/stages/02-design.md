@@ -8,6 +8,7 @@
 
 ## Agent 执行步骤
 
+0. 按 Skill `sdlc-architecture` 判断要不要做架构审查。未命中则把 `status` 写成 `not_required`，写明理由并继续。命中则先完成审查，再列出文件。
 1. 列出待改文件（精确路径）
 2. 列出依赖（DB 迁移、新 API、新组件）
 3. 列出验收命令（如 `test:harness:ci`、手动步骤）

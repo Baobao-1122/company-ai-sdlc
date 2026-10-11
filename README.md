@@ -37,6 +37,7 @@
 |------|------|------|
 | 1 协作入口 | `AGENTS.md` + `docs/` | Agent 切换会话时的必读边界与启动命令 |
 | 2 阶段 Skill | `.cursor/skills/sdlc-*` | 按 SDLC 阶段触发专用流程 |
+| 2b 架构审查 | `sdlc-architecture` | **条件触发**。只在大的技术方案于 CP-02 前另开只读 Agent；小需求不调用 |
 | 3 项目 Rule | `.cursor/rules/*.mdc` | 编码规范、提交规范、文档同步 |
 | 4 质量门禁 | `harness.config.ts` | 合并前 `test:harness:ci` |
 | 4b P1 预 Review | `sdlc-verify` + Bugbot | harness 后、CP-05 前（若触发）· **Reflection** |

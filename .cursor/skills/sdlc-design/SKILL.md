@@ -7,18 +7,30 @@ description: AI-SDLC 阶段2设计拆分。CP-01 通过后输出设计，CP-02 �
 
 ## AI 引导职责
 
-- 进入时：`✅ 已收到确认 → 进入 **阶段 2 · 设计拆分**`，预告 CP-02
+- 进入时：`✅ 已收到确认 → 进入 **阶段 2 · 设计拆分**`。先做架构审查触发判断并写下 status；status 未写入，或 `cp.cp02` 仍为 `pending` 且 status 仍是 `pending_confirm`、`changes_requested`、`revising` 时，不得输出 CP-02
 - 回复开头：`📍 阶段 2/5 · 设计拆分`
 - 结束：**CP-02 决策包**（判据：业务项目 `docs/qa/ai-sdlc-decision-rubrics.md` §3 CP-02；标准库 `docs/decision-rubrics.md`）
 
 ## Task State
 
 - 进入时 **Read** `.sdlc/task-state.yaml`；`cp.cp01` 须为 `passed` 或 `skipped`
+- `cp.cp02` 仍为 `pending`，且 `extensions.architectureReview.status` 为 `pending_confirm`、`changes_requested` 或 `revising` 时，停在架构审查，不得输出 CP-02
+- status 尚未写入时，先做触发判断并写下 status，不得直接输出 CP-02
 - 用户 CP-02「开始实现」后 **Update**：`cp.cp02: passed`，`stage: implement`
 
 ## 前置
 
 CP-01 已通过，或用户明确需求已确认
+
+## 架构审查（CP-02 之前，条件触发）
+
+输出 CP-02 之前，**Read** `.cursor/skills/sdlc-architecture/SKILL.md` 并做触发判断。
+
+- **未命中，或子 Agent 结论为「这次不该审」：** 把 `status` 写成 `not_required`，设计正文写 `架构审查未触发：` 加一句理由，然后输出 CP-02。未命中时禁止启动架构审查 Agent。
+- **结论为「通过」：** 暂停。用户回复「确认通过」后，先把 `status` 写成 `reviewed`，再输出 CP-02。再审后仍是「通过」时，再等一次「确认通过」。
+- **结论为「要改」：** 暂停，`status` 记 `changes_requested`。用户选择之前不得输出 CP-02。
+- **用户已选「按审查改方案」：** `status` 改为 `revising`，改方案并再审。再审给出新结论之前不得输出 CP-02，也不得再次询问同一选择。
+- **用户已选「维持方案」：** 把理由写入 `extensions.architectureReview`，`status` 记 `waived`，然后输出 CP-02。
 
 ## CP-02 输出结构
 

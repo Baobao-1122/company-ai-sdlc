@@ -75,6 +75,12 @@
 | 时机 | 更新内容 |
 |------|----------|
 | 用户 CP-01「确认」 | `cp.cp01: passed`，`stage: design` |
+| 架构审查「通过」 | `extensions.architectureReview.status: pending_confirm` |
+| 用户「确认通过」 | `extensions.architectureReview.status: reviewed`，然后才可输出 CP-02 |
+| 架构审查「要改」 | `extensions.architectureReview.status: changes_requested` |
+| 用户「按审查改方案」 | `extensions.architectureReview.status: revising` |
+| 用户「维持方案」 | `extensions.architectureReview.status: waived`，然后输出 CP-02 |
+| 主 Agent 判定未触发，或子 Agent「这次不该审」 | `extensions.architectureReview.status: not_required`，写未触发理由后输出 CP-02 |
 | 用户 CP-02「开始实现」 | `cp.cp02: passed`，`stage: implement` |
 | 进入阶段 4 | `stage: verify` |
 | 只读对账完成 | `verify.reconcileDone` |
@@ -134,7 +140,13 @@
 | state 条件 | 建议下一步 |
 |------------|-----------|
 | `stage: requirements` 且 `cp.cp01: pending` | 继续 CP-01 或等人确认 |
-| `cp.cp01: passed` 且 `cp.cp02: pending` | 阶段 2 设计 / CP-02 |
+| `architectureReview.status: pending_confirm` 且 `cp.cp02: pending` | 停在架构审查，等用户「确认通过」。不得输出 CP-02 |
+| `architectureReview.status: changes_requested` 且 `cp.cp02: pending` | 停在架构审查，等用户「按审查改方案」或「维持方案」。不得输出 CP-02 |
+| `architectureReview.status: revising` 且 `cp.cp02: pending` | 用户已选「按审查改方案」。继续改方案并再审，不得再次询问该选择，不得输出 CP-02 |
+| `architectureReview.status: waived` 且 `cp.cp02: pending` | 用户已「维持方案」。输出 CP-02 |
+| `architectureReview.status: reviewed` 且 `cp.cp02: pending` | 用户已「确认通过」。输出 CP-02 |
+| `architectureReview` 尚未写入，且 `cp.cp01` 为 `passed` 或 `skipped`、`cp.cp02: pending` | 先按 `sdlc-architecture` 做触发判断并写下 status。不得输出 CP-02 |
+| `architectureReview.status: not_required` 且 `cp.cp02: pending` | 已写下未触发理由。输出 CP-02 |
 | `cp.cp02: passed` 且 `stage: implement` | 阶段 3 编码 |
 | `stage: verify` 且 `harnessPass: null` | 跑 harness / 对账 |
 | `harnessPass: true` 且 `cp.cp05: pending` | CP-05 汇报 |
@@ -155,6 +167,18 @@ extensions:
 
 **禁止**为项目特有字段修改标准库核心 schema 字段名。
 
+标准库预留的架构审查扩展（未触发可省略整段）：
+
+```yaml
+extensions:
+  architectureReview:
+    required: false
+    reason: ""
+    status: not_required # not_required | pending_confirm | changes_requested | revising | reviewed | waived
+```
+
+定义见 Skill `sdlc-architecture`。`pending_confirm` 表示子 Agent 结论已是「通过」，正在等用户回复「确认通过」。`changes_requested` 表示结论是「要改」，正在等用户「按审查改方案」或「维持方案」。`revising` 表示用户已选「按审查改方案」，正在改方案并准备再审。这三个状态都不得输出 CP-02。`waived` 只用于用户选择「维持方案」。`reviewed` 只在用户已回复「确认通过」之后写入。
+
 ---
 
 ## 7. 与 Supervisor / LangGraph 的关系
@@ -168,4 +192,5 @@ extensions:
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-09 | v1.1 | `extensions.architectureReview`：`pending_confirm`、`changes_requested`、`revising` 都不得输出 CP-02 |
 | 2026-09-10 | v1.0 | 初版：schema v1、生命周期、换 Chat SOP |
