@@ -45,6 +45,23 @@ Agent 在 `⏸ CP-xx` 前**必须**按序输出：
 
 ---
 
+### 架构审查（条件触发，CP-02 之前）
+
+不是每条需求的暂停点。判断见 Skill `sdlc-architecture`。
+
+| # | 判断要点 | 调用 | 不调用 |
+|---|----------|------|--------|
+| 1 | 是否在定首版运行形态，或改变已接受的进程、队列、并发、部署拓扑、持久化 | 调用只读架构审查 Agent | 按已接受架构实现 |
+| 2 | 是否在定第一版跨系统数据归属或对外契约 | 调用 | 已接受契约内增补字段 |
+| 3 | 是否只是缺陷、文案、样式或依赖补丁 | 不调用 | 调用即范围过大 |
+| 4 | 用户是否明确说「评审技术方案」「架构审查」或 architecture review | 调用 | 未点名时按第 1–3 行 |
+
+用户点名必须调用。本表与 Skill `sdlc-architecture`「何时必须调用」冲突时，以 Skill 该表为准。命中「调用」任一格时，`cp.cp02` 仍为 `pending` 且 status 为 `pending_confirm`、`changes_requested`、`revising` 时，不得输出 CP-02。未命中或子 Agent 判定「这次不该审」时，把 `extensions.architectureReview.status` 写成 `not_required`，写一句未触发理由后才输出 CP-02。用户已回复「确认通过」后，先把 `extensions.architectureReview.status` 写成 `reviewed`，再输出 CP-02。用户已回复「维持方案」后，先把 `status` 写成 `waived`，再输出 CP-02。
+
+审查时逐条使用 Skill `sdlc-architecture` 的「审查标准」A1–A8。不得在审查当轮临时另起标准。
+
+---
+
 ### CP-02 设计拆分
 
 | # | 判断要点 | Allow | Stop |

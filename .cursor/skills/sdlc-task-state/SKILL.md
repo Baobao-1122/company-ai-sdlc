@@ -36,6 +36,13 @@ description: AI-SDLC 任务状态读写。新 Chat 恢复、过 CP/门禁后更�
 | P1 Reflection 完成 | `reflection.p1`，`verify.p1Review` |
 | CP-05 用户已指示 | `cp.cp05: passed` |
 | 用户「提交」 | `stage: submit` |
+| 架构审查「通过」 | `extensions.architectureReview.status: pending_confirm` |
+| 用户「确认通过」 | `extensions.architectureReview.status: reviewed`，然后才可输出 CP-02 |
+| 架构审查「要改」 | `extensions.architectureReview.status: changes_requested` |
+| 架构审查「这次不该审」 | `extensions.architectureReview.status: not_required`，写未触发理由后输出 CP-02 |
+| 主 Agent 判定未触发 | `extensions.architectureReview.status: not_required`，写未触发理由后输出 CP-02 |
+| 用户「按审查改方案」 | `extensions.architectureReview.status: revising` |
+| 用户「维持方案」 | `extensions.architectureReview.status: waived`，然后输出 CP-02 |
 | CP-06 Reflection 完成 | `reflection.cp06` |
 | commit 成功 | `cp.cp06: passed`，`stage: done` |
 | 「暂停」 | `stage: paused` |
@@ -58,12 +65,15 @@ description: AI-SDLC 任务状态读写。新 Chat 恢复、过 CP/门禁后更�
 **建议下一步：** …
 ```
 
+`pending_confirm` 且 `cp.cp02` 仍为 `pending` 时等用户「确认通过」。`changes_requested` 且 `cp.cp02` 仍为 `pending` 时等用户「按审查改方案」或「维持方案」。`revising` 且 `cp.cp02` 仍为 `pending` 时继续改方案并再审，不得再次询问该选择。这三个状态在 `cp.cp02` 仍为 `pending` 时都不得输出 CP-02。用户「确认通过」后 `status` 记 `reviewed`，然后可以输出 CP-02。用户「维持方案」后 `status` 记 `waived`，然后可以输出 CP-02。推断表：标准库 `docs/task-state.md` §5；业务项目 `docs/qa/ai-sdlc-task-state.md` §5。
+
 ## 与阶段 Skill 的关系
 
 | Skill | 调用 Task State |
 |-------|-----------------|
 | `sdlc-requirements` | CP-01 前 Create；确认后 Update |
 | `sdlc-design` | 进入时 Read；CP-02 通过后 Update |
+| `sdlc-architecture` | 仅触发时调用。「通过」先写 `pending_confirm`，用户「确认通过」后改为 `reviewed`。「要改」写 `changes_requested`。用户「按审查改方案」后改为 `revising`，再审前不得回到等待选择。用户「维持方案」后改为 `waived` 并输出 CP-02 |
 | `sdlc-implement` | 进入时 Read；进 verify 前 Update stage |
 | `sdlc-verify` | 进入时 Read；harness/P1/CP-05 后 Update |
 | `sdlc-review` | 进入时 Read；CP-06/commit 后 Update |
