@@ -88,7 +88,7 @@
 
 | 检查项 | 要求 |
 |--------|------|
-| 项目类型 | Web 项目（Next.js / React + TS 等） |
+| 项目类型 | Web 项目，或引擎服务。技术栈见 [tech-stack-selection.md](tech-stack-selection.md)。本脚本安装的是流程门禁，不代替这次选择 |
 | 包管理 | 有 `package.json` |
 | 标准库路径 | 本地存在 `company-ai-sdlc` 仓库 |
 | 变量 | `SDLC_ROOT` = 标准库绝对路径；`PROJECT_ROOT` = 目标项目绝对路径 |

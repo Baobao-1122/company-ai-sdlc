@@ -13,6 +13,7 @@
 | [docs/human-checkpoints.md](docs/human-checkpoints.md) | **人工确认暂停点 CP-01～CP-10** |
 | [docs/decision-rubrics.md](docs/decision-rubrics.md) | **CP 决策判据（Allow/Stop + 决策包）** |
 | [docs/project-onboarding.md](docs/project-onboarding.md) | **业务项目接入（AI 可执行版，新/已有）** |
+| [docs/tech-stack-selection.md](docs/tech-stack-selection.md) | **按产品形态选技术栈：Web 或引擎** |
 | [docs/task-state.md](docs/task-state.md) | **任务状态 schema（换 Chat 可续）** |
 | [docs/stages/](docs/stages/) | 各 SDLC 阶段操作说明 |
 

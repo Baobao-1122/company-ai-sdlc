@@ -1,6 +1,6 @@
 # company-ai-sdlc
 
-公司级 **AI 辅助软件研发流程（SDLC）** 标准库。定义 Agent 协作入口、阶段 Skill、项目 Rule、质量门禁与接入方式，供所有 Web 项目复用。
+公司级 **AI 辅助软件研发流程（SDLC）** 标准库。定义 Agent 协作入口、阶段 Skill、项目 Rule、质量门禁与接入方式。Web 平台和引擎服务都走这套流程。技术栈按 [docs/tech-stack-selection.md](docs/tech-stack-selection.md) 选，不沿用接入脚本自带的语言。
 
 ## 快速开始
 
@@ -57,6 +57,7 @@ company-ai-sdlc/
 ├── docs/
 │   ├── workflow-overview.md  # 工作流总览
 │   ├── project-onboarding.md # 项目接入指南
+│   ├── tech-stack-selection.md # Web 与引擎的技术栈入口
 │   ├── decision-rubrics.md   # CP 决策判据（通用）
 │   ├── commit-rules-audit.md # CP-06 Rules + guard 激活
 │   └── stages/               # 各阶段操作说明
