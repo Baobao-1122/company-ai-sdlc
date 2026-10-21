@@ -18,6 +18,11 @@ scope: ""
 acceptance: []
 #  - "验收条目 1"
 
+# CP-01 确认的设计草稿（CP-01 前讨论中改过的文档；没有为 []）
+drafts: []
+#  - path: "docs/xxx.md"
+#    summary: "改了什么"
+
 # 人工卡点（pending | passed | skipped）
 # skipped：小改动跳过 CP-01 等场景，须在 notes 写明理由
 cp:

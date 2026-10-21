@@ -26,6 +26,7 @@
 | **标准库** | `templates/task-state.template.yaml` | 空模板 |
 | **标准库** | `.cursor/skills/sdlc-task-state/` | Agent 读写协议 |
 | **业务项目** | `.sdlc/task-state.yaml` | **当前 feat 的任务实例**（建议跟分支 commit） |
+| **业务项目** | `.sdlc/history/{taskId}-{YYYYMMDD}.yaml` | 已结束或已切走的任务实例（见 §4.2 归档） |
 
 灵犀、运营平台等各写各的实例；**不**把实例放进 `company-ai-sdlc` 仓库。
 
@@ -41,6 +42,7 @@
 | `branch` | string | 当前 Git 分支 |
 | `stage` | enum | `requirements` \| `design` \| `implement` \| `verify` \| `submit` \| `done` \| `paused` |
 | `scope` / `acceptance` | string / string[] | 需求与验收 |
+| `drafts` | object[] | CP-01 确认的设计草稿：`path`、`summary`。没有草稿为 `[]`（见 [human-checkpoints.md](human-checkpoints.md) §2.1） |
 | `cp.*` | enum | `pending` \| `passed` \| `skipped` |
 | `verify.*` | mixed | harness、对账、P1 audit 等客观门禁 |
 | `reflection.*` | mixed | P1 / CP-06 结论摘要（非完整 Bugbot 日志） |
@@ -65,16 +67,25 @@
 
 | 时机 | 动作 |
 |------|------|
-| CP-01 输出对齐表后 | 从模板创建 `.sdlc/task-state.yaml`，填入 `taskId`、`scope`、`acceptance`、`stage: requirements` |
+| CP-01 输出对齐表后 | 从模板创建 `.sdlc/task-state.yaml`，填入 `taskId`、`scope`、`acceptance`、`stage: requirements`；`drafts` 保持 `[]`，CP-01 确认后再写 |
 | 用户明确「小改动」且跳过 CP-01 | 可创建简化实例，`cp.cp01: skipped`，`notes` 写明理由 |
 
 创建后 **建议 commit** 到当前 feat 分支（与代码同生命周期）。
+
+**归档（不覆盖、不删除）：** 创建前若 `.sdlc/task-state.yaml` 已存在且 `taskId` 不同，先把它**移动**到 `.sdlc/history/{taskId}-{YYYYMMDD}.yaml`（日期取移动当天；同名已存在时加 `-2`、`-3`），再从模板创建。触发时机：
+
+| 时机 | 说明 |
+|------|------|
+| 用户在 CP-09 指定下一项 | 旧任务已过 CP-05，归档后新任务从 CP-01 开始 |
+| 旧任务未结束，用户要求先做另一项 | 先在旧 state 写 `stage: paused` 和 `notes`（停在哪、为什么切走），再归档 |
+
+恢复旧任务时，把 history 里的文件移回 `.sdlc/task-state.yaml`（当前 state 按上表先归档）。history 文件与 state 一样建议跟分支 commit。
 
 ### 4.3 更新（Update）
 
 | 时机 | 更新内容 |
 |------|----------|
-| 用户 CP-01「确认」 | `cp.cp01: passed`，`stage: design` |
+| 用户 CP-01「确认」 | `cp.cp01: passed`，`stage: design`，`drafts` 按确认的清单写入 |
 | 架构审查「通过」 | `extensions.architectureReview.status: pending_confirm` |
 | 用户「确认通过」 | `extensions.architectureReview.status: reviewed`，然后才可输出 CP-02 |
 | 架构审查「要改」 | `extensions.architectureReview.status: changes_requested` |
@@ -90,7 +101,8 @@
 | 用户 CP-05「提交」 | `stage: submit`（cp05 仍 pending 直到 CP-05 对话结束可标 passed） |
 | CP-05 对话结束（用户已指示） | `cp.cp05: passed` |
 | CP-06 Reflection 完成 | `reflection.cp06.*` |
-| commit 成功 | `cp.cp06: passed`，`stage: done`（或删除/归档 state 文件） |
+| commit 成功 | `cp.cp06: passed`，`stage: done`；文件保留到下一个任务创建前再归档（§4.2） |
+| 用户 CP-09 指定下一项 | 按 §4.2 归档，再创建新 state |
 | 用户「暂停」 | `stage: paused` |
 | 用户「继续改」 | `stage: implement`，追加 `blockers` 或清空已修项 |
 
@@ -151,6 +163,7 @@
 | `stage: verify` 且 `harnessPass: null` | 跑 harness / 对账 |
 | `harnessPass: true` 且 `cp.cp05: pending` | CP-05 汇报 |
 | 用户已说「提交」且 `cp.cp06: pending` | CP-06 Reflection + commit |
+| 用户提的新任务与 state 的 `taskId` 不同 | 先汇报旧任务断点；用户确认切换后按 §4.2 归档，不覆盖 |
 
 ---
 
@@ -192,5 +205,6 @@ extensions:
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-21 | v1.2 | 新增 `drafts` 字段；换任务时旧 state 移到 `.sdlc/history/`，不覆盖、不删除 |
 | 2026-10-09 | v1.1 | `extensions.architectureReview`：`pending_confirm`、`changes_requested`、`revising` 都不得输出 CP-02 |
 | 2026-09-10 | v1.0 | 初版：schema v1、生命周期、换 Chat SOP |
