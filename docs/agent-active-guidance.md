@@ -43,7 +43,7 @@ AI：宣布阶段 → 执行 → 到达 CP → 主动提问 + 给出回复选项
 
 **架构审查：** 进入设计后、给出「开始实现」前，按 Skill `sdlc-architecture` 判断。只有首版运行形态、运行方式变更、第一版跨系统契约、已有消费方的对外契约升主版本，或用户明确要求评审技术方案时，才另开只读 Agent。未命中则把 `extensions.architectureReview.status` 写成 `not_required`，写一句理由，再做 CP-02。
 
-**Task State：** 开发任务须维护 `.sdlc/task-state.yaml`（见 [task-state.md](task-state.md)）。**新 Chat** 或用户说「续任务」时，Agent **第一句 Read state** 并汇报断点；**不新增** mandatory 人工步骤。换到下一个任务前，先把旧 state 移到 `.sdlc/history/`，不覆盖。
+**Task State：** 开发任务须维护 `.sdlc/task-state.yaml`（见 [task-state.md](task-state.md)）。**新 Chat** 或用户说「续任务」时，Agent **第一句 Read state 和 `.sdlc/history/index.md`（若有）** 并汇报断点；上一任务全文和背景文档按需再读；**不新增** mandatory 人工步骤。换到下一个任务前，先把旧 state 移到 `.sdlc/history/`，不覆盖，并在 `index.md` 追加一行。
 
 ---
 
@@ -276,6 +276,7 @@ migration prepare（生成或手写并检查）→ 应用至目标验收库 → 
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-21 | v1.7 | 新 Chat 读 state 和归档索引，上一任务与背景文档按需读 |
 | 2026-10-21 | v1.6 | 先讨论后对齐：CP-01 前只写设计草稿并在 CP-01 列清单；架构审查加对外契约升主版本；换任务先归档 state |
 | 2026-09-08 | v1.5 | Reflection 轮次须用 🔄 标题明确告知用户（§6.1；链到 code-review §11） |
 | 2026-08-19 | v1.4 | 增加业务数据只读抽样对账门禁（校验只出结论与问题） |

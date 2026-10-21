@@ -33,7 +33,7 @@
 | **CP-06** | **每次 commit 前** | ① Code Review ② commit 计划 | **两步都停**；见 [code-review.md](code-review.md) | 步骤1：「确认提交/先修/忽略」步骤2：「确认提交」 |
 | **CP-07** | 推送前 | 任何 `git push` 前 | 汇报分支与远端 | 「推送」 |
 | **CP-08** | 合并 dev / PR | merge、PR merge、push dev 前 | 说明源分支、变更摘要 | 「合并」「开 PR」 |
-| **CP-09** | 下一需求项 | 当前任务在 CP-05 已完成 | **停止**；用户指定下一项后，先把当前 `.sdlc/task-state.yaml` 移到 `.sdlc/history/`，再从 CP-01 开始（见 [task-state.md](task-state.md) §4.2） | 「做下一项 FU-xxx」 |
+| **CP-09** | 下一需求项 | 当前任务在 CP-05 已完成 | **停止**；用户指定下一项后，先把当前 `.sdlc/task-state.yaml` 移到 `.sdlc/history/`，在 `.sdlc/history/index.md` 追加一行，新任务状态的 `previousTask` 指向归档文件，再从 CP-01 开始（见 [task-state.md](task-state.md) §4.2、§4.5） | 「做下一项 FU-xxx」 |
 | **CP-10** | 高风险操作 | deploy、SSH、**生产库写操作**、DMS 变更、删库 | **停止** | 负责人明确授权 |
 
 ### 2.1 CP-01 之前的设计草稿
@@ -118,7 +118,7 @@
 | 「跑 harness 验收」 | 验证阶段 → 完成后 **CP-05 停** |
 | 「提交」 | 进入 **sdlc-review** → CP-06 步骤1 Review → 步骤2 commit |
 | 「推送」 | **CP-07** → push |
-| 「做下一项」 | 通过 CP-09 → 归档当前 task-state → 新需求从 CP-01 开始 |
+| 「做下一项」 | 通过 CP-09 → 归档当前 task-state 并追加索引 → 新需求从 CP-01 开始（`previousTask` 指向归档） |
 
 **一条指令串多步（谨慎）：** 用户说「确认需求并开始实现，做完跑 harness」= 跳过 CP-01 口头确认、**仍须在 CP-05 停**；**不能**跳过 CP-05 自动 commit。
 
@@ -140,6 +140,7 @@
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-21 | v1.9 | CP-09 归档时追加 `.sdlc/history/index.md`，新任务状态写 `previousTask` |
 | 2026-10-21 | v1.8 | CP-01 前允许设计草稿并须在 CP-01 列清单；CP-09 先归档 task-state；已有消费方的对外契约升主版本触发架构审查 |
 | 2026-09-18 | v1.7 | 数据红线 Rule；生产库写操作明确进 CP-10 |
 | 2026-08-19 | v1.5 | CP-02/05 增加业务数据只读抽样对账；明确校验禁止改删数据 |

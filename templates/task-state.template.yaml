@@ -18,6 +18,16 @@ scope: ""
 acceptance: []
 #  - "验收条目 1"
 
+# 上一个任务（第一个任务为 null）。归档时写，见 docs/task-state.md §4.2
+previousTask: null
+#  path: ".sdlc/history/{taskId}-{YYYYMMDD}.yaml"
+#  handoff: "交给本任务的尾巴；没有写「无」"
+
+# 本任务要读的背景文档（按需读，见 docs/task-state.md §4.1）
+context: []
+#  - path: "docs/xxx.md"
+#    why: "读它要知道什么"
+
 # CP-01 确认的设计草稿（CP-01 前讨论中改过的文档；没有为 []）
 drafts: []
 #  - path: "docs/xxx.md"
@@ -53,7 +63,7 @@ reflection:
 # 阻塞项（非空时 Agent 推荐 Stop，不得默认提交）
 blockers: []
 
-# 自由备注（断点续做关键信息、已合 commit、待办）
+# 断点和下一步，不超过 5 行；设计决定写进文档，再在 context 指向它
 notes: ""
 
 # 项目扩展（各业务项目在 AGENTS.md 约定键名，勿改 schema 核心字段）

@@ -511,6 +511,7 @@ done
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-21 | v2.9 | 任务状态分层读取：`previousTask`、`context` 与 `.sdlc/history/index.md`；升级时随 §3.5 原子组同步 |
 | 2026-10-21 | v2.8 | §3.5 原子组加 `sdlc-requirements`、`sdlc-task-state` 与 `ai-sdlc-task-state.md`（设计草稿清单、state 归档）；架构审查加对外契约升主版本 |
 | 2026-10-09 | v2.7 | 新增 `sdlc-architecture`：大方案在 CP-02 前条件触发架构审查，小需求不调用；审查只按 A1–A8 |
 | 2026-09-15 | v2.6 | CP-06 `guard:sdlc-commit-rules` 与 commit-rules-audit 模板 |
