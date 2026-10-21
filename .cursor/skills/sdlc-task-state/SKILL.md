@@ -10,23 +10,28 @@ description: AI-SDLC 任务状态读写。新 Chat 恢复、过 CP/门禁后更�
 | 项目 | 路径 |
 |------|------|
 | 业务项目实例 | `.sdlc/task-state.yaml` |
+| 已归档实例 | `.sdlc/history/{taskId}-{YYYYMMDD}.yaml` |
+| 归档索引 | `.sdlc/history/index.md`（每个归档任务一行） |
 | 空模板 | 标准库 `templates/task-state.template.yaml`；业务项目 sync 后同路径约定 |
 | 规范全文 | 标准库 `docs/task-state.md`；业务项目 `docs/qa/ai-sdlc-task-state.md`（sync 后） |
 
 ## 硬性规则
 
-1. **开发类任务** — 开场检查 `.sdlc/task-state.yaml`：存在则 **Read 并汇报**，不存在则在 CP-01 后 **Create**
-2. **新 Chat / 「续任务」** — **第一件事 Read** state + `git branch --show-current`，对照 `branch` 字段
+1. **开发类任务** — 开场检查 `.sdlc/task-state.yaml`：存在则 **Read 并汇报**，不存在则在输出 CP-01 时 **Create**（`drafts` 留空，用户确认后写入）
+2. **新 Chat / 「续任务」** — **第一件事 Read** state + `.sdlc/history/index.md`（若有）+ `git branch --show-current`，对照 `branch` 字段
 3. **过 CP / 过客观门禁** — **必须 Update** state（见下表）
 4. **不存** 大段终端日志；存结论、命令名、一行摘要
 5. **不替代 CP** — State 记录进度；授权仍靠人工 CP 回复
+6. **换任务先归档** — 创建新 state 前，若已有 state 且 `taskId` 不同：**移动**到 `.sdlc/history/{taskId}-{YYYYMMDD}.yaml`（同名加 `-2`），不覆盖、不删除。旧任务未结束时先写 `stage: paused` 和切走原因。同时在 `.sdlc/history/index.md` 追加一行，新 state 的 `previousTask` 指向归档文件并写 `handoff`。规范见 `docs/task-state.md` §4.2、§4.5
+7. **按需深读** — `previousTask` 不为 `null`，且 `handoff` 不是「无」或 `stage: requirements` 时读归档全文；要动 `context` 里某份文档涉及的部分时读那一份；用户问更早的任务时按索引找归档。不要开场就读完整个 history
+8. **`notes` 只写断点** — 不超过 5 行；设计决定写进文档，在 `context` 里加 `path` 和 `why`
 
 ## 更新触发表
 
 | 事件 | 字段 |
 |------|------|
 | 创建任务 | 全文件初始化 |
-| CP-01「确认」 | `cp.cp01: passed`，`stage: design` |
+| CP-01「确认」 | `cp.cp01: passed`，`stage: design`，`drafts` 按确认的清单写入 |
 | CP-01 跳过（小改动） | `cp.cp01: skipped`，`notes` 理由 |
 | CP-02「开始实现」 | `cp.cp02: passed`，`stage: implement` |
 | 进入验证 | `stage: verify` |
@@ -44,7 +49,8 @@ description: AI-SDLC 任务状态读写。新 Chat 恢复、过 CP/门禁后更�
 | 用户「按审查改方案」 | `extensions.architectureReview.status: revising` |
 | 用户「维持方案」 | `extensions.architectureReview.status: waived`，然后输出 CP-02 |
 | CP-06 Reflection 完成 | `reflection.cp06` |
-| commit 成功 | `cp.cp06: passed`，`stage: done` |
+| commit 成功 | `cp.cp06: passed`，`stage: done`；文件保留到下个任务创建前 |
+| CP-09 指定下一项 / 用户切到另一项 | 按规则 6 归档，再创建新 state |
 | 「暂停」 | `stage: paused` |
 | 「继续改」 | `stage: implement`，更新 `blockers` |
 
@@ -61,6 +67,7 @@ description: AI-SDLC 任务状态读写。新 Chat 恢复、过 CP/门禁后更�
 | 分支 | {branch} |
 | 阶段 | {stage} |
 | 阻塞 | {blockers 或 无} |
+| 上一任务 | {previousTask.path 与 handoff，或 无} |
 
 **建议下一步：** …
 ```
@@ -71,7 +78,7 @@ description: AI-SDLC 任务状态读写。新 Chat 恢复、过 CP/门禁后更�
 
 | Skill | 调用 Task State |
 |-------|-----------------|
-| `sdlc-requirements` | CP-01 前 Create；确认后 Update |
+| `sdlc-requirements` | 输出 CP-01 时 Create；确认后 Update（含 `drafts`） |
 | `sdlc-design` | 进入时 Read；CP-02 通过后 Update |
 | `sdlc-architecture` | 仅触发时调用。「通过」先写 `pending_confirm`，用户「确认通过」后改为 `reviewed`。「要改」写 `changes_requested`。用户「按审查改方案」后改为 `revising`，再审前不得回到等待选择。用户「维持方案」后改为 `waived` 并输出 CP-02 |
 | `sdlc-implement` | 进入时 Read；进 verify 前 Update stage |
@@ -82,6 +89,7 @@ description: AI-SDLC 任务状态读写。新 Chat 恢复、过 CP/门禁后更�
 
 - 有 state 文件却从不 Read（换 Chat 场景）
 - 过 CP 不更新 state
+- 新任务直接覆盖或删除旧任务的 state
 - 用 state 代替 harness 或 CP 授权
 - 在标准库仓库创建业务项目的 state 实例
 

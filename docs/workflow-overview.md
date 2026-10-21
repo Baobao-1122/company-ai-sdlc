@@ -65,10 +65,10 @@ flowchart TB
 **策略：稳健优先（半自动）。** 详见 [human-checkpoints.md](human-checkpoints.md) · [decision-rubrics.md](decision-rubrics.md)。
 
 1. **CP-01～10**：每个 CP 须输出 **决策包**（①目的 ②判据 ③自检 ④推荐 ⑤选项）
-2. **CP-01**：需求对齐后 **必须停**，等人确认
+2. **CP-01**：需求对齐后 **必须停**，等人确认；对齐表后列设计草稿清单（CP-01 前改过的文档），没有写「无」
 3. **CP-02**：设计输出后 **必须停**，等「开始实现」。若命中架构审查触发条件，须先完成 `sdlc-architecture`
 4. **CP-05**：验证与 Reflection（P1）汇报后 **必须停**，不得自动 commit
-5. **CP-09**：一项完成后 **必须停**，不得自动开下一项
+5. **CP-09**：一项完成后 **必须停**，不得自动开下一项；开下一项前把旧 task-state 移到 `.sdlc/history/` 并追加 `index.md` 一行，新 state 的 `previousTask` 指向它
 6. **提交前必跑** `test:harness:ci` +（若触发）**P1 Reflection** + `sdlc-review`（CP-06 Reflection）
 7. **Reflection 轮次须用 `🔄 Reflection` 标题告知用户**（见 [code-review.md](code-review.md) §11）
 
@@ -98,6 +98,8 @@ flowchart TB
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-21 | v1.4 | CP-09 归档追加索引，新 state 写 `previousTask` |
+| 2026-10-21 | v1.3 | CP-01 前设计草稿须在 CP-01 列出；CP-09 先归档 task-state |
 | 2026-09-08 | v1.2 | 新增 P1 预 Review 与 Reflection 用户可见标识（code-review §10–§11） |
 | 2026-07-27 | v1.1 | 新增决策判据层 decision-rubrics + 决策包 |
 | 2026-07-17 | v1.0 | 首版：五层架构与阶段 Skill 定义 |

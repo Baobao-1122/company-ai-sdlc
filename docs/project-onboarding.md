@@ -3,7 +3,7 @@
 > **文档 ID：** `ONBOARDING-v2`  
 > **受众：** Cursor Agent、研发人员  
 > **用途：** 将业务 Web 项目接入 `company-ai-sdlc` AI 工作流  
-> **最后更新：** 2026-08-07
+> **最后更新：** 2026-10-21
 
 ---
 
@@ -66,7 +66,7 @@
 | F-10 | `.cursor/skills/sdlc-verify/` | 推荐 | 验证阶段 Skill | 从标准库复制 |
 | F-11 | `.cursor/skills/sdlc-review/` | ✅ | **每次 commit 前 Code Review** | 从标准库复制 |
 | F-11b | `.cursor/skills/sdlc-task-state/` | 推荐 | 任务状态读写（换 Chat 可续） | 从标准库复制 |
-| F-11e | `.cursor/skills/sdlc-architecture/` | 推荐 | **条件触发**的架构审查。只在首版运行形态、运行方式变更或第一版跨系统契约时，于 CP-02 前调用 | 从标准库复制 |
+| F-11e | `.cursor/skills/sdlc-architecture/` | 推荐 | **条件触发**的架构审查。只在首版运行形态、运行方式变更、第一版跨系统契约或已有消费方的对外契约升主版本时，于 CP-02 前调用 | 从标准库复制 |
 | F-11c | `docs/qa/ai-sdlc-task-state.md` | 推荐 | Task State 规范（sync 自标准库） | 从标准库复制 |
 | F-11d | `.sdlc/task-state.yaml` | 推荐 | 当前 feat 任务实例（模板可空） | init 脚本或首个任务 Create |
 | F-12 | `harness.config.ts` | ✅ | 质量门禁 layers | 创建或保留已有 |
@@ -209,8 +209,8 @@ Agent 接入已有仓库时，对照下表决定「保留什么、补什么」�
 |--------|------|------|----------|
 | P0（先执行） | `AGENTS.md` | 数据库项目先补 migration prepare/apply、结构检查与针对性 API 冒烟实际命令 | 合并进已有 **Agent 执行规程**；无该章节时才新建，不覆盖项目边界/启动命令 |
 | P0（原子同步） | `.cursor/rules/sdlc-workflow.mdc` | 对比 diff，合并数据库变更链与决策包段落 | 不删项目特有 Rule |
-| P0（原子同步） | `.cursor/skills/sdlc-design`、`sdlc-implement`、`sdlc-verify`、**`sdlc-review`**、**`sdlc-architecture`** | 对比 diff，合并数据库计划、P1/Reflection、验证、Review 与架构审查触发 | 不覆盖项目特有补充 |
-| P0（原子同步） | `docs/qa/ai-sdlc-decision-rubrics.md`、guidance、checkpoints、**`ai-sdlc-code-review.md`** | 复制或 diff 合并（含 §10 P1、§11 Reflection） | 项目扩展仍在 AGENTS §CP 判断扩展 |
+| P0（原子同步） | `.cursor/skills/sdlc-requirements`、`sdlc-design`、`sdlc-implement`、`sdlc-verify`、**`sdlc-review`**、**`sdlc-architecture`**、**`sdlc-task-state`** | 对比 diff，合并设计草稿清单、数据库计划、P1/Reflection、验证、Review、架构审查触发与 state 归档 | 不覆盖项目特有补充 |
+| P0（原子同步） | `docs/qa/ai-sdlc-decision-rubrics.md`、guidance、checkpoints、**`ai-sdlc-code-review.md`**、**`ai-sdlc-task-state.md`** | 复制或 diff 合并（含 §10 P1、§11 Reflection、checkpoints §2.1 设计草稿、task-state §4.2 归档） | 项目扩展仍在 AGENTS §CP 判断扩展 |
 | P1 | 其他 `docs/qa/ai-sdlc-*.md`、Skill | 按需更新 | 跳过若项目有本地定制 |
 | P1 | **`docs/commit-rules-audit.md`**、`templates/check-sdlc-commit-rules.example.mjs` | 业务项目复制脚本并注册 `guard:sdlc-commit-rules`；`docs/qa/sdlc-commit-rules.md` 索引 | 不覆盖已落地的项目 guard 映射 |
 | P2 | `AGENTS.md` | 补 **§CP 判断扩展** 与 SDLC 文档链接 | **不覆盖**项目边界/启动命令 |
@@ -226,10 +226,12 @@ PROJECT_ROOT="/path/to/existing-project"
 mkdir -p "$PROJECT_ROOT/.cursor/rules" "$PROJECT_ROOT/.cursor/skills" "$PROJECT_ROOT/docs/qa"
 [[ -f "$PROJECT_ROOT/.cursor/rules/sdlc-workflow.mdc" ]] || \
   cp "$SDLC_ROOT/.cursor/rules/sdlc-workflow.mdc" "$PROJECT_ROOT/.cursor/rules/sdlc-workflow.mdc"
-for skill in sdlc-design sdlc-implement sdlc-verify sdlc-review sdlc-architecture; do
+for skill in sdlc-requirements sdlc-design sdlc-implement sdlc-verify sdlc-review sdlc-architecture sdlc-task-state; do
   [[ -d "$PROJECT_ROOT/.cursor/skills/$skill" ]] || \
     cp -R "$SDLC_ROOT/.cursor/skills/$skill" "$PROJECT_ROOT/.cursor/skills/$skill"
 done
+[[ -f "$PROJECT_ROOT/docs/qa/ai-sdlc-task-state.md" ]] || \
+  cp "$SDLC_ROOT/docs/task-state.md" "$PROJECT_ROOT/docs/qa/ai-sdlc-task-state.md"
 [[ -f "$PROJECT_ROOT/docs/qa/ai-sdlc-decision-rubrics.md" ]] || \
   cp "$SDLC_ROOT/docs/decision-rubrics.md" "$PROJECT_ROOT/docs/qa/ai-sdlc-decision-rubrics.md"
 [[ -f "$PROJECT_ROOT/docs/qa/ai-sdlc-agent-active-guidance.md" ]] || \
@@ -242,6 +244,8 @@ done
 # 3. 对比并合并以下原子组，禁止只更新其中一项：
 diff -u "$PROJECT_ROOT/.cursor/rules/sdlc-workflow.mdc" \
   "$SDLC_ROOT/.cursor/rules/sdlc-workflow.mdc" || true
+diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-requirements/SKILL.md" \
+  "$SDLC_ROOT/.cursor/skills/sdlc-requirements/SKILL.md" || true
 diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-design/SKILL.md" \
   "$SDLC_ROOT/.cursor/skills/sdlc-design/SKILL.md" || true
 diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-implement/SKILL.md" \
@@ -252,6 +256,10 @@ diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-review/SKILL.md" \
   "$SDLC_ROOT/.cursor/skills/sdlc-review/SKILL.md" || true
 diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-architecture/SKILL.md" \
   "$SDLC_ROOT/.cursor/skills/sdlc-architecture/SKILL.md" || true
+diff -u "$PROJECT_ROOT/.cursor/skills/sdlc-task-state/SKILL.md" \
+  "$SDLC_ROOT/.cursor/skills/sdlc-task-state/SKILL.md" || true
+diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-task-state.md" \
+  "$SDLC_ROOT/docs/task-state.md" || true
 diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-code-review.md" \
   "$SDLC_ROOT/docs/code-review.md" || true
 diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-decision-rubrics.md" \
@@ -503,6 +511,8 @@ done
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-21 | v2.9 | 任务状态分层读取：`previousTask`、`context` 与 `.sdlc/history/index.md`；升级时随 §3.5 原子组同步 |
+| 2026-10-21 | v2.8 | §3.5 原子组加 `sdlc-requirements`、`sdlc-task-state` 与 `ai-sdlc-task-state.md`（设计草稿清单、state 归档）；架构审查加对外契约升主版本 |
 | 2026-10-09 | v2.7 | 新增 `sdlc-architecture`：大方案在 CP-02 前条件触发架构审查，小需求不调用；审查只按 A1–A8 |
 | 2026-09-15 | v2.6 | CP-06 `guard:sdlc-commit-rules` 与 commit-rules-audit 模板 |
 | 2026-09-08 | v2.5 | §3.5 升级同步含 sdlc-review、ai-sdlc-code-review §10–§11（P1 + Reflection） |
