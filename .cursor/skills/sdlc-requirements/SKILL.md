@@ -13,7 +13,7 @@ description: AI-SDLC 阶段1需求对齐。输出对齐表后在 CP-01 暂停，
 ## Task State
 
 - 开场 **Read** Skill **`sdlc-task-state`**；若 `.sdlc/task-state.yaml` 已存在且非本任务 → 先汇报旧任务断点，用户确认切换后按 `sdlc-task-state` 规则 6 归档（旧任务未结束时先写 `stage: paused` 和切走原因），不覆盖
-- 输出对齐表后 **Create** `.sdlc/task-state.yaml`（从 `templates/task-state.template.yaml`），填入 `taskId`、`branch`、`scope`、`acceptance`；`drafts` 保持 `[]`
+- 输出对齐表后 **Create** `.sdlc/task-state.yaml`（从 `templates/task-state.template.yaml`），填入 `taskId`、`branch`、`scope`、`acceptance`、`previousTask`（刚归档的文件和交接；没有上一个任务时写 `null`）、`context`（本任务要读的背景文档，每份一句 `why`）；`drafts` 保持 `[]`
 - 用户 CP-01「确认」后 **Update**：`cp.cp01: passed`，`stage: design`，`drafts` 按确认的清单写入
 
 ## 先讨论、后对齐

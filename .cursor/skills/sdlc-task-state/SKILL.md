@@ -11,17 +11,20 @@ description: AI-SDLC 任务状态读写。新 Chat 恢复、过 CP/门禁后更�
 |------|------|
 | 业务项目实例 | `.sdlc/task-state.yaml` |
 | 已归档实例 | `.sdlc/history/{taskId}-{YYYYMMDD}.yaml` |
+| 归档索引 | `.sdlc/history/index.md`（每个归档任务一行） |
 | 空模板 | 标准库 `templates/task-state.template.yaml`；业务项目 sync 后同路径约定 |
 | 规范全文 | 标准库 `docs/task-state.md`；业务项目 `docs/qa/ai-sdlc-task-state.md`（sync 后） |
 
 ## 硬性规则
 
 1. **开发类任务** — 开场检查 `.sdlc/task-state.yaml`：存在则 **Read 并汇报**，不存在则在输出 CP-01 时 **Create**（`drafts` 留空，用户确认后写入）
-2. **新 Chat / 「续任务」** — **第一件事 Read** state + `git branch --show-current`，对照 `branch` 字段
+2. **新 Chat / 「续任务」** — **第一件事 Read** state + `.sdlc/history/index.md`（若有）+ `git branch --show-current`，对照 `branch` 字段
 3. **过 CP / 过客观门禁** — **必须 Update** state（见下表）
 4. **不存** 大段终端日志；存结论、命令名、一行摘要
 5. **不替代 CP** — State 记录进度；授权仍靠人工 CP 回复
-6. **换任务先归档** — 创建新 state 前，若已有 state 且 `taskId` 不同：**移动**到 `.sdlc/history/{taskId}-{YYYYMMDD}.yaml`（同名加 `-2`），不覆盖、不删除。旧任务未结束时先写 `stage: paused` 和切走原因。规范见 `docs/task-state.md` §4.2
+6. **换任务先归档** — 创建新 state 前，若已有 state 且 `taskId` 不同：**移动**到 `.sdlc/history/{taskId}-{YYYYMMDD}.yaml`（同名加 `-2`），不覆盖、不删除。旧任务未结束时先写 `stage: paused` 和切走原因。同时在 `.sdlc/history/index.md` 追加一行，新 state 的 `previousTask` 指向归档文件并写 `handoff`。规范见 `docs/task-state.md` §4.2、§4.5
+7. **按需深读** — `previousTask` 不为 `null`，且 `handoff` 不是「无」或 `stage: requirements` 时读归档全文；要动 `context` 里某份文档涉及的部分时读那一份；用户问更早的任务时按索引找归档。不要开场就读完整个 history
+8. **`notes` 只写断点** — 不超过 5 行；设计决定写进文档，在 `context` 里加 `path` 和 `why`
 
 ## 更新触发表
 
@@ -64,6 +67,7 @@ description: AI-SDLC 任务状态读写。新 Chat 恢复、过 CP/门禁后更�
 | 分支 | {branch} |
 | 阶段 | {stage} |
 | 阻塞 | {blockers 或 无} |
+| 上一任务 | {previousTask.path 与 handoff，或 无} |
 
 **建议下一步：** …
 ```
