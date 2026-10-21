@@ -10,9 +10,9 @@ alwaysApply: true
 ## Task State（换 Chat 可续）
 
 - 业务项目任务实例：`.sdlc/task-state.yaml`（规范见 `docs/task-state.md`；读写 Skill **`sdlc-task-state`**）
-- **开发任务开场 / 新 Chat / 「续任务」**：Agent **必须先 Read** 已有 state（若存在）
+- **开发任务开场 / 新 Chat / 「续任务」**：Agent **必须先 Read** 已有 state 和 `.sdlc/history/index.md`（若存在）；归档全文和 `context` 文档**按需**读（`docs/task-state.md` §4.1）
 - **过 CP、过 harness/P1/CP-06**：Agent **必须 Update** state；**不新增** mandatory 人工步骤（CP 仍由人确认）
-- **换任务（CP-09 或切到另一项）**：先把旧 state **移动**到 `.sdlc/history/{taskId}-{YYYYMMDD}.yaml`，不覆盖、不删除
+- **换任务（CP-09 或切到另一项）**：先把旧 state **移动**到 `.sdlc/history/{taskId}-{YYYYMMDD}.yaml`，不覆盖、不删除；在 `index.md` 追加一行，新 state 的 `previousTask` 指向它
 
 ## 协作模型
 
