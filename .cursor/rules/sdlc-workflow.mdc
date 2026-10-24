@@ -61,13 +61,15 @@ CP-02 通过后：**接下来自动完成（无需回复）** → 改代码 → 
 | CP-04 | 「一起修」/「只修 xxx」/「跳过」 |
 | CP-05 | 「提交」/「继续改：…」/「下一项」/「暂停」 |
 | **CP-06** | **步骤1 Review：**「确认提交/先修/忽略」**步骤2 commit：**「确认提交」 |
-| CP-07～10 | 见 human-checkpoints.md |
+| **CP-08** | 未命中可验算结果：「去 GitHub Merge」/「先修 PR」。命中：先「口径接受」/「口径不接受：…」 |
+| CP-07、CP-09～10 | 见 human-checkpoints.md |
 
 ## 禁止
 
 - CP 处只有选项、无判据/自检/推荐
 - 未收到用户回复就进入下一阶段
 - **跳过 sdlc-review 直接 git commit**
+- **跳过 sdlc-pr-review 直接合并**；命中可验算业务结果时，未拿到「口径接受」就建议合并
 - **Reflection 轮次未用 `🔄 Reflection` 告知用户**（见 `docs/code-review.md` §11）
 - CP-05 后自动 commit/push
 - 未过 CP-01/02 写业务代码（小改动仍须 CP-05 + CP-06 Review）
