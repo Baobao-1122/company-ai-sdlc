@@ -11,6 +11,7 @@
 | CP-02 | （例：新 npm 包须在依赖与库计划列出，「开始实现」= 确认安装） | 已评估 | 未列却 pnpm add |
 | CP-02 | （例：改 api/auth 须列 harness:auth） | 验收命令含 auth profile | 缺 profile |
 | CP-06 | （例：L2 路径 app/api、lib/adapters） | Review 含 Security | 敏感路径未 L2 |
+| CP-08 | （例：金额、权限允许/拒绝、对外字段取值。没有这类结果就留空，不要写账单核对） | 命中时 PR 有一条会变和一条不变的结果 | 未声明却被要求做数字核对 |
 | CP-10 | （例：禁止擅自写生产库/DMS/ECS；须 CP-10 负责人授权） | 负责人授权 | Agent 自行写生产 |
 
 **审查关注点（Bugbot Custom Instructions）：**

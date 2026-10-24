@@ -15,6 +15,8 @@
 4. 执行 `git commit`（用户未要求时不 push）
 5. 若需多个 commit → **每个 commit 前重复 1～4**
 
+合并进集成主分支不在本阶段自动发生。用户说「提 PR / 合并 dev」时，改读 Skill `sdlc-pr-review` 与 [pr-review.md](../pr-review.md)。
+
 ## 分支约定
 
 | 分支 | 用途 |
