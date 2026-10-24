@@ -56,6 +56,7 @@ flowchart TB
 | P1 预 Review | `sdlc-verify` | 自动（harness 后） | Bugbot 互查（Reflection） | 无需回复，等 CP-05 |
 | Code Review | `sdlc-review` | 「提交」时自动 | Bugbot [+ Security]（Reflection） | **CP-06 步骤1** |
 | 提交 | `sdlc-review` + git-commit | 「确认提交」 | commit 计划 | **CP-06 步骤2** |
+| PR 审查 | `sdlc-pr-review` | 「提 PR」「合并 dev」 | 整分支 Bugbot；命中可验算结果时写人工判断题 | **CP-08 步骤1** |
 
 **人工暂停点完整定义：** [human-checkpoints.md](human-checkpoints.md)  
 **每个 CP 判什么：** [decision-rubrics.md](decision-rubrics.md)（决策包：目的 → 判据 → 自检 → 推荐 → 选项）
@@ -70,7 +71,8 @@ flowchart TB
 4. **CP-05**：验证与 Reflection（P1）汇报后 **必须停**，不得自动 commit
 5. **CP-09**：一项完成后 **必须停**，不得自动开下一项；开下一项前把旧 task-state 移到 `.sdlc/history/` 并追加 `index.md` 一行，新 state 的 `previousTask` 指向它
 6. **提交前必跑** `test:harness:ci` +（若触发）**P1 Reflection** + `sdlc-review`（CP-06 Reflection）
-7. **Reflection 轮次须用 `🔄 Reflection` 标题告知用户**（见 [code-review.md](code-review.md) §11）
+7. **合并前必跑** `sdlc-pr-review`。命中项目声明的可验算业务结果时，须有一条会变、一条不变的结果，并等人「口径接受」（见 [pr-review.md](pr-review.md)）
+8. **Reflection 轮次须用 `🔄 Reflection` 标题告知用户**（见 [code-review.md](code-review.md) §11）
 
 ## 5. Skill 分工
 
@@ -98,6 +100,7 @@ flowchart TB
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-24 | v1.5 | 增加 PR 审查阶段；命中可验算业务结果时须人工口径 |
 | 2026-10-21 | v1.4 | CP-09 归档追加索引，新 state 写 `previousTask` |
 | 2026-10-21 | v1.3 | CP-01 前设计草稿须在 CP-01 列出；CP-09 先归档 task-state |
 | 2026-09-08 | v1.2 | 新增 P1 预 Review 与 Reflection 用户可见标识（code-review §10–§11） |

@@ -43,6 +43,7 @@
 | 4b P1 预 Review | `sdlc-verify` + Bugbot | harness 后、CP-05 前（若触发）· **Reflection** |
 | 4c Rules 激活 | `guard:sdlc-commit-rules` | **CP-06** · 按 diff 列出 applicable_rules + 补跑 guard（见 [commit-rules-audit.md](docs/commit-rules-audit.md)） |
 | 4c Code Review | `sdlc-review` + Cursor Bugbot | **每次 commit 前** · **Reflection** |
+| 4e PR Review | `sdlc-pr-review` + Bugbot | **合并前** · 见 [pr-review.md](docs/pr-review.md) |
 | 4d Task State | `sdlc-task-state` + `.sdlc/task-state.yaml` | **换 Chat 可续**；实例在业务项目 |
 | 5 自动化（可选） | Cursor Automations | PR 触发、定时巡检 |
 
@@ -60,6 +61,7 @@ company-ai-sdlc/
 │   ├── tech-stack-selection.md # Web 与引擎的技术栈入口
 │   ├── decision-rubrics.md   # CP 决策判据（通用）
 │   ├── commit-rules-audit.md # CP-06 Rules + guard 激活
+│   ├── pr-review.md          # CP-08 PR 审查与人工口径题
 │   └── stages/               # 各阶段操作说明
 ├── templates/                # 可复制到业务项目的模板
 │   ├── AGENTS.md.template

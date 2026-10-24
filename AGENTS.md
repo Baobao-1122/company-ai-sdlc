@@ -9,6 +9,7 @@
 | [README.md](README.md) | 仓库概览与快速开始 |
 | [docs/workflow-overview.md](docs/workflow-overview.md) | 五层 AI 工作流架构 |
 | [docs/code-review.md](docs/code-review.md) | **每次 commit 前 Code Review + P1 Reflection（Bugbot）** |
+| [docs/pr-review.md](docs/pr-review.md) | **合并前 PR 审查；命中可验算业务结果时须人工判断口径** |
 | [docs/agent-active-guidance.md](docs/agent-active-guidance.md) | AI 主动引导 |
 | [docs/human-checkpoints.md](docs/human-checkpoints.md) | **人工确认暂停点 CP-01～CP-10** |
 | [docs/decision-rubrics.md](docs/decision-rubrics.md) | **CP 决策判据（Allow/Stop + 决策包）** |
@@ -34,7 +35,7 @@
 | `.cursor/rules/` | 公司通用 Rule（复制到业务项目） |
 | `.cursor/rules/data-redlines.mdc` | **数据红线**（含禁止擅自写生产库） |
 | `.cursor/rules/security-baseline.mdc` | Web 安全基线 |
-| `.cursor/skills/sdlc-*` | SDLC 阶段 Skill（含 `sdlc-task-state`、条件触发的 `sdlc-architecture`） |
+| `.cursor/skills/sdlc-*` | SDLC 阶段 Skill（含 `sdlc-task-state`、`sdlc-pr-review`、条件触发的 `sdlc-architecture`） |
 | `templates/task-state.template.yaml` | 业务项目 `.sdlc/task-state.yaml` 模板 |
 | `scripts/init-project-sdlc.sh` | 项目一键接入 |
 
