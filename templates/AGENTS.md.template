@@ -68,6 +68,7 @@ Agent 在 `⏸ CP-xx` 处输出 **决策包**：①目的 ②判断要点 ③自
 | CP-01 | {{CP01_EXTENSION}} | | |
 | CP-02 | {{CP02_EXTENSION}} | | |
 | CP-06 | {{CP06_EXTENSION}} | | |
+| CP-08 | 可验算业务结果与合并前必查项（见 [docs/qa/ai-sdlc-pr-review.md](docs/qa/ai-sdlc-pr-review.md) §2.1、§3）。没有就写「无」 | | |
 | CP-10 | {{CP10_EXTENSION}} | | |
 
 ## Git 提交（硬性）

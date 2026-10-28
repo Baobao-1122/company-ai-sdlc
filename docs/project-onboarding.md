@@ -298,7 +298,7 @@ Agent 编辑 `AGENTS.md` 时，以下章节 **不得留「待填」**：
 | **Agent 执行规程**（有数据库项目必填） | 触发条件 → 必跑命令；数据库项目须含 migration prepare/apply、状态/结构检查与 API 冒烟命令 | 读 package scripts、数据库文档与项目特有校验 |
 | **Git 提交（硬性）** | 一 commit 一功能 + test:harness:ci | 固定文案即可 |
 | **AI-SDLC 协作节奏** | 一项一项 / 确认后写代码 / 完成后暂停 | 固定文案即可 |
-| **CP 判断扩展** | CP-01/02/06/10 项目 Allow/Stop | 读 deploy/Playbook/问用户 |
+| **CP 判断扩展** | CP-01/02/06/08/10 项目 Allow/Stop。CP-08 写可验算业务结果与合并前必查项，没有写「无」 | 读 deploy/Playbook/问用户 |
 
 有数据库的项目必须在 `AGENTS.md` 写出项目实际命令，禁止只写“执行迁移”等不可运行的描述。若暂时没有结构检查命令，应将其登记为接入缺口，不能假定 migration 文件存在即表示数据库已更新。
 
@@ -518,6 +518,7 @@ done
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-28 | v3.1 | AGENTS 与项目判据模板增加 CP-08 行：可验算业务结果与合并前必查项；PR 审查增加合并证据 |
 | 2026-10-24 | v3.0 | §3.5 原子组增加 `sdlc-pr-review` 与 `ai-sdlc-pr-review.md` |
 | 2026-10-21 | v2.9 | 任务状态分层读取：`previousTask`、`context` 与 `.sdlc/history/index.md`；升级时随 §3.5 原子组同步 |
 | 2026-10-21 | v2.8 | §3.5 原子组加 `sdlc-requirements`、`sdlc-task-state` 与 `ai-sdlc-task-state.md`（设计草稿清单、state 归档）；架构审查加对外契约升主版本 |
