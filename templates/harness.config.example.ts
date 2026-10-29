@@ -7,6 +7,7 @@ import { defineHarnessConfig } from "@linzhang1122/web-harness"
  * 3. 可选：`max-lines-per-function` 80～100（配合 general-principles 圈复杂度 10，非 50 行硬线）
  * 4. pnpm add -D @linzhang1122/web-harness（或 file:../xseed-web-harness）
  * 5. package.json 添加 test:harness / test:harness:ci
+ * 6. 复制 templates/check-ci-workflow-security.example.mjs → scripts/，package.json 添加 guard:ci-workflow-security
  */
 export default defineHarnessConfig({
   name: "{{PROJECT_SLUG}}",
@@ -21,7 +22,10 @@ export default defineHarnessConfig({
     },
     L4: {
       name: "静态检查",
-      steps: [{ type: "shell", command: "pnpm lint" }],
+      steps: [
+        { type: "shell", command: "pnpm lint" },
+        { type: "shell", command: "pnpm guard:ci-workflow-security" },
+      ],
     },
   },
 })
