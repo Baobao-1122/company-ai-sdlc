@@ -3,7 +3,7 @@
 > **文档 ID：** `ONBOARDING-v2`  
 > **受众：** Cursor Agent、研发人员  
 > **用途：** 将业务 Web 项目接入 `company-ai-sdlc` AI 工作流  
-> **最后更新：** 2026-10-21
+> **最后更新：** 2026-10-29
 
 ---
 
@@ -75,6 +75,10 @@
 | F-15 | `docs/qa/ai-sdlc-decision-rubrics.md` | ✅ | CP Allow/Stop 判据 | 从标准库复制 |
 | F-16 | `AGENTS.md` § **CP 判断扩展** | ✅ | 项目特有判据 | 从模板填写 |
 | F-17 | `.cursor/rules/nextjs-middleware-response.mdc` | Next.js 推荐 | middleware/proxy 改写 Response 红线（防 text/plain 整页源码） | 从标准库复制；见 `docs/code-review.md` §8 |
+| F-18 | `.cursor/rules/ci-security.mdc` + `docs/qa/ai-sdlc-ci-security.md` | ✅ | CI 工作流安全规范（只读权限、无密钥、锁哈希的官方 action、不连真实环境） | 从标准库复制 |
+| F-19 | `scripts/check-ci-workflow-security.mjs` + `package.json` → `scripts.guard:ci-workflow-security`，并接进 harness L4 | ✅ | 自动检查 `.github/workflows/`；没有工作流时直接通过 | 复制 `templates/check-ci-workflow-security.example.mjs` |
+| F-20 | `.github/workflows/ci.yml` | 数据库项目推荐 | PR 自动跑 harness 与真实库测试 | 从 `templates/ci/db-tests.workflow.example.yml` 改写；须过 CP（`docs/ci-security.md` R12） |
+| F-21 | GitHub 仓库设置 | 有工作流时 ✅ | Actions 只允许官方且锁哈希、令牌只读、无 Secrets、无自建机器、分支保护（S1～S8） | **人工**按 `docs/ci-security.md` §4 设置；Agent 只做只读核对 |
 
 **说明：** F-07～F-10 也可依赖用户级 Skill（`~/.cursor/skills/`），但**项目内复制**更稳定（新同事/新机器开箱即用）。
 
@@ -211,11 +215,12 @@ Agent 接入已有仓库时，对照下表决定「保留什么、补什么」�
 | P0（原子同步） | `.cursor/rules/sdlc-workflow.mdc` | 对比 diff，合并数据库变更链与决策包段落 | 不删项目特有 Rule |
 | P0（原子同步） | `.cursor/skills/sdlc-requirements`、`sdlc-design`、`sdlc-implement`、`sdlc-verify`、**`sdlc-review`**、**`sdlc-pr-review`**、**`sdlc-architecture`**、**`sdlc-task-state`** | 对比 diff，合并设计草稿清单、数据库计划、P1/Reflection、验证、Review、PR 审查、架构审查触发与 state 归档 | 不覆盖项目特有补充 |
 | P0（原子同步） | `docs/qa/ai-sdlc-decision-rubrics.md`、guidance、checkpoints、**`ai-sdlc-code-review.md`**、**`ai-sdlc-pr-review.md`**、**`ai-sdlc-task-state.md`** | 复制或 diff 合并（含 §10 P1、§11 Reflection、checkpoints §2.1 设计草稿、task-state §4.2 归档、PR 可验算结果与人工判断块） | 项目扩展仍在 AGENTS §CP 判断扩展 |
+| P0（原子同步） | **`.cursor/rules/ci-security.mdc`**、**`docs/qa/ai-sdlc-ci-security.md`**、**`scripts/check-ci-workflow-security.mjs`**（含 `guard:ci-workflow-security` 与 harness L4 登记） | 复制或 diff 合并；规范、规则、检查脚本必须同版本 | 不在项目里单独放宽检查脚本；项目已有工作流须先跑通检查再合并 |
 | P1 | 其他 `docs/qa/ai-sdlc-*.md`、Skill | 按需更新 | 跳过若项目有本地定制 |
 | P1 | **`docs/commit-rules-audit.md`**、`templates/check-sdlc-commit-rules.example.mjs` | 业务项目复制脚本并注册 `guard:sdlc-commit-rules`；`docs/qa/sdlc-commit-rules.md` 索引 | 不覆盖已落地的项目 guard 映射 |
 | P2 | `AGENTS.md` | 补 **§CP 判断扩展** 与 SDLC 文档链接 | **不覆盖**项目边界/启动命令 |
 
-数据库项目升级必须先完成首行的命令登记与 V5 核验，再将三项“P0（原子同步）”一起完成；任一项缺失都应停止升级，不得留下无法执行或定义不完整的强制门禁。
+数据库项目升级必须先完成首行的命令登记与 V5 核验，再将四项“P0（原子同步）”一起完成；任一项缺失都应停止升级，不得留下无法执行或定义不完整的强制门禁。
 
 ```bash
 SDLC_ROOT="/path/to/company-ai-sdlc"
@@ -242,6 +247,13 @@ done
   cp "$SDLC_ROOT/docs/code-review.md" "$PROJECT_ROOT/docs/qa/ai-sdlc-code-review.md"
 [[ -f "$PROJECT_ROOT/docs/qa/ai-sdlc-pr-review.md" ]] || \
   cp "$SDLC_ROOT/docs/pr-review.md" "$PROJECT_ROOT/docs/qa/ai-sdlc-pr-review.md"
+[[ -f "$PROJECT_ROOT/.cursor/rules/ci-security.mdc" ]] || \
+  cp "$SDLC_ROOT/.cursor/rules/ci-security.mdc" "$PROJECT_ROOT/.cursor/rules/ci-security.mdc"
+[[ -f "$PROJECT_ROOT/docs/qa/ai-sdlc-ci-security.md" ]] || \
+  cp "$SDLC_ROOT/docs/ci-security.md" "$PROJECT_ROOT/docs/qa/ai-sdlc-ci-security.md"
+mkdir -p "$PROJECT_ROOT/scripts"
+[[ -f "$PROJECT_ROOT/scripts/check-ci-workflow-security.mjs" ]] || \
+  cp "$SDLC_ROOT/templates/check-ci-workflow-security.example.mjs" "$PROJECT_ROOT/scripts/check-ci-workflow-security.mjs"
 
 # 3. 对比并合并以下原子组，禁止只更新其中一项：
 diff -u "$PROJECT_ROOT/.cursor/rules/sdlc-workflow.mdc" \
@@ -274,6 +286,12 @@ diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-agent-active-guidance.md" \
   "$SDLC_ROOT/docs/agent-active-guidance.md" || true
 diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-human-checkpoints.md" \
   "$SDLC_ROOT/docs/human-checkpoints.md" || true
+diff -u "$PROJECT_ROOT/.cursor/rules/ci-security.mdc" \
+  "$SDLC_ROOT/.cursor/rules/ci-security.mdc" || true
+diff -u "$PROJECT_ROOT/docs/qa/ai-sdlc-ci-security.md" \
+  "$SDLC_ROOT/docs/ci-security.md" || true
+diff -u "$PROJECT_ROOT/scripts/check-ci-workflow-security.mjs" \
+  "$SDLC_ROOT/templates/check-ci-workflow-security.example.mjs" || true
 
 # 4. 合并上述 diff 后统一执行 §5 验证
 ```
@@ -394,6 +412,12 @@ node -e "const fs=require('fs');const s=fs.readFileSync('AGENTS.md','utf8');if(/
 node -e "const fs=require('fs');const p=require('./package.json');const names=[...Object.keys(p.dependencies??{}),...Object.keys(p.devDependencies??{}),...Object.keys(p.scripts??{})].join(' ');const usesDb=/(drizzle|prisma|sequelize|typeorm|knex|mongoose|postgres|mysql|sqlite|(^|\\s)pg(\\s|$)|(^|\\s)db:)/i.test(names)||['lib/db','src/db','prisma','drizzle.config.ts','drizzle.config.js'].some((path)=>fs.existsSync(path));if(!usesDb){console.log('V5 database commands N/A');process.exit(0)}const s=fs.readFileSync('AGENTS.md','utf8');const x=s.match(/## Agent 执行规程[^\\n]*[\\s\\S]*?(?=\\n## |$)/)?.[0]??'';const r=x.split('\\n').find((line)=>/修改数据库 schema/i.test(line))??'';if(!/migration-prepare:\\s*\`[^\`]+\`/i.test(r)||!/migration-apply:\\s*\`[^\`]+\`/i.test(r)||!/structure-check:\\s*\`[^\`]+\`/i.test(r)||!/api-smoke:\\s*\`[^\`]+\`/i.test(r))process.exit(1);console.log('V5 database commands registered')"
 # V5 只校验命令登记，不在接入时操作数据库；实际执行属于具体 schema 任务的
 # CP-05 前置验证。任一命令未登记时，V5 失败，禁止声称接入完成。
+
+# V6 CI 工作流安全（没有 .github/workflows 时脚本输出「跳过」并退出 0）
+test -f .cursor/rules/ci-security.mdc && test -f docs/qa/ai-sdlc-ci-security.md && echo "V6 ci-security docs OK"
+node -e "const p=require('./package.json'); if(!p.scripts?.['guard:ci-workflow-security']) process.exit(1); console.log('V6 guard script registered')"
+node -e "const s=require('fs').readFileSync('harness.config.ts','utf8'); if(!s.includes('guard:ci-workflow-security')) process.exit(1); console.log('V6 guard in harness')"
+node scripts/check-ci-workflow-security.mjs
 ```
 
 | 验证 ID | 通过条件 |
@@ -403,6 +427,7 @@ node -e "const fs=require('fs');const p=require('./package.json');const names=[.
 | V3 | harness ci profile 命令退出码 0（缺依赖时标 ⏭ 并说明） |
 | V4 | AGENTS.md 无占位且 Agent 能复述项目边界 |
 | V5 | 无数据库时标 N/A；有数据库时登记 migration prepare/apply、结构检查与针对性 API 冒烟四类命令，缺一项即失败；接入阶段不执行迁移 |
+| V6 | F-18、F-19 存在，`harness.config.ts` 里登记了 `guard:ci-workflow-security`；检查脚本退出码 0。已有工作流不通过时接入**未完成**，按 `docs/ci-security.md` 改工作流须另走 CP；F-21 仓库设置由人完成，汇报里列为待你确认 |
 
 ---
 
@@ -425,6 +450,8 @@ node -e "const fs=require('fs');const p=require('./package.json');const names=[.
 | F-13 | test:harness:ci | ✅ / ❌ |
 | F-15 | ai-sdlc-decision-rubrics.md | ✅ / ❌ |
 | F-16 | AGENTS §CP 判断扩展 | ✅ / ❌ |
+| F-18～F-19 | CI 安全规范、规则与检查脚本 | ✅ / ❌ |
+| F-21 | GitHub 仓库设置（人工） | ✅ 已核对 / ⏳ 待你设置 |
 
 ### 验证结果
 | 验证 | 结果 | 说明 |
@@ -433,6 +460,7 @@ node -e "const fs=require('fs');const p=require('./package.json');const names=[.
 | V3 harness | ✅ / ⏭ | 未装依赖则写补装命令 |
 | V4 AGENTS 完整性 | ✅ | 无占位且能复述项目边界 |
 | V5 数据库命令登记 | ✅ / N/A / ❌ | 逐项列出四类命令；缺失时必须为 ❌ |
+| V6 CI 工作流安全 | ✅ / ❌ | 检查脚本输出；没有工作流时写「跳过」 |
 
 ### 待你确认/补填
 1. …
@@ -460,7 +488,8 @@ node -e "const fs=require('fs');const p=require('./package.json');const names=[.
 | 6 | `cp $SDLC_ROOT/templates/decision-rubrics-project.template.md → docs/qa/ai-sdlc-cp-extension.template.md` |
 | 7 | `cp $SDLC_ROOT/templates/docs/prd.template.md → docs/prd.md`（或链已有 PRD） |
 | 8 | 编辑 package.json 追加 `test:harness` / `test:harness:ci` |
-| 9 | 执行 §5 验证 |
+| 9 | `cp $SDLC_ROOT/docs/ci-security.md → docs/qa/ai-sdlc-ci-security.md`；`cp $SDLC_ROOT/templates/check-ci-workflow-security.example.mjs → scripts/check-ci-workflow-security.mjs`；package.json 追加 `guard:ci-workflow-security` |
+| 10 | 执行 §5 验证 |
 
 ---
 
@@ -508,6 +537,9 @@ done
 | 阶段 Skill | `.cursor/skills/sdlc-*/SKILL.md` |
 | CP 判据 | `docs/decision-rubrics.md` |
 | PR 审查 | `docs/pr-review.md` |
+| CI 安全规范 | `docs/ci-security.md`、`.cursor/rules/ci-security.mdc` |
+| CI 检查脚本 | `templates/check-ci-workflow-security.example.mjs` |
+| CI 工作流模板（数据库项目） | `templates/ci/db-tests.workflow.example.yml` |
 | 项目判据模板 | `templates/decision-rubrics-project.template.md` |
 | 工作流说明 | `docs/workflow-overview.md` |
 | 阶段细则 | `docs/stages/01-requirements.md` … `05-release.md` |
@@ -518,6 +550,7 @@ done
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-29 | v3.2 | CI 安全：F-18～F-21、§3.5 原子组、§5 V6、§7 手动步骤、§10 索引 |
 | 2026-10-28 | v3.1 | AGENTS 与项目判据模板增加 CP-08 行：可验算业务结果与合并前必查项；PR 审查增加合并证据 |
 | 2026-10-24 | v3.0 | §3.5 原子组增加 `sdlc-pr-review` 与 `ai-sdlc-pr-review.md` |
 | 2026-10-21 | v2.9 | 任务状态分层读取：`previousTask`、`context` 与 `.sdlc/history/index.md`；升级时随 §3.5 原子组同步 |

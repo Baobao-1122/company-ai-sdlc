@@ -55,6 +55,7 @@ Agent 根据**本次待提交 diff** 自动选档，并在 Review 前告知你�
 | `middleware.ts`、`proxy.ts`、`**/middleware/**` | L2 |
 | 改写 Response/Set-Cookie 的 auth 包装器（如 `**/adjust-*-cookies*.ts`） | L2 |
 | `.env*`、密钥、crypto | L2 |
+| `.github/**`（CI 工作流及其配置）、`scripts/check-ci-workflow-security.mjs`、`harness.config.ts` | L2 |
 | 项目自定义（如 `lib/evcs/**`） | L2 |
 
 模板见 `templates/review-policy.example.md`。
@@ -70,7 +71,7 @@ Agent 根据**本次待提交 diff** 自动选档，并在 Review 前告知你�
 
 **Custom Instructions（必填项由项目定义）：** 项目 AGENTS.md 中的审查关注点（如 CEC102 红线、RBAC 口径）；**须包含** `guard:sdlc-commit-rules` 终端输出的 `applicable_rules` 对应 `.cursor/rules` / 专项 docs（见 [commit-rules-audit.md](./commit-rules-audit.md)）。
 
-**Security Review 默认追加（L2）：** 对照 Rule `security-baseline.mdc`（SQL 参数化、日志脱敏、服务端权限/计价、Zod 边界）与 **`data-redlines.mdc`**（**禁止** diff 或脚本对**生产库**写操作；对账/reconcile 须只读）。
+**Security Review 默认追加（L2）：** 对照 Rule `security-baseline.mdc`（SQL 参数化、日志脱敏、服务端权限/计价、Zod 边界）与 **`data-redlines.mdc`**（**禁止** diff 或脚本对**生产库**写操作；对账/reconcile 须只读）。diff 命中 `.github/**`、`scripts/check-ci-workflow-security.mjs` 或 `harness.config.ts` 时再对照 **`ci-security.mdc`** 与 [ci-security.md](./ci-security.md) R1～R16，要求 `guard:ci-workflow-security` 通过，并确认检查规则和 harness 检查步骤没有被删除或放宽。
 
 **Next.js 项目必加（命中 §3 middleware/proxy/auth Cookie 路径时）：** 禁止为改 Header/Cookie 而 `response.text()` 后再 `new Response(string)` 且未拷贝 `Content-Type`（默认 `text/plain` → 整页源码）；只改 Cookie 须透传 `response.body`；禁止 middleware 与 `/api/auth` 双写同一会话 Cookie。详见 §8 与 Rule `nextjs-middleware-response.mdc`。
 
@@ -326,6 +327,7 @@ CP-06 沿用 `sdlc-review` 的「审查结论」表，但块首须加：
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-29 | v1.8 | §3 CI 工作流、CI 检查脚本与 harness 配置为 L2；§4 Security 命中时对照 ci-security |
 | 2026-09-18 | v1.7 | §4 Security 默认对照 data-redlines / security-baseline |
 | 2026-09-15 | v1.6 | §1 增加 CP-06 `guard:sdlc-commit-rules`；§4 Custom Instructions 须含 applicable_rules |
 | 2026-09-08 | v1.5 | 新增 §11 Reflection 用户可见标识（硬性）；§10 P1 预 Review |

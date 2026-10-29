@@ -1,0 +1,65 @@
+# 数据库项目 CI 工作流模板（规范：docs/ci-security.md）
+#
+# 接入：
+# 1. 复制为业务项目的 .github/workflows/ci.yml
+# 2. 把「项目准备步骤」换成项目自己的命令；没有准备步骤就删掉这一步
+# 3. 没有数据库测试的项目：删掉 services、job 级 env 和「数据库测试」这一步
+# 4. 改完跑 pnpm guard:ci-workflow-security，通过后再走 CP-06
+#
+# action 和镜像只用提交哈希 / 摘要引用；升级方法见 docs/ci-security.md §5。
+name: ci
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16@sha256:1beaa3084eee2676f20a9cd9928f0bf2c5bf674f8e49f81017912183d377c61c
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci-only-not-a-secret
+          POSTGRES_DB: app_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d app_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # 只指向上面这个一次性容器；禁止换成任何真实环境（生产、验收、共享库）的连接串
+      DATABASE_URL: postgresql://ci:ci-only-not-a-secret@localhost:5432/app_ci
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: 安装 Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - name: 启用 pnpm
+        run: corepack enable
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+      - name: 项目准备步骤
+        # 项目自定义；只能作用于上面的临时库，例如给临时库打本地开发库标记
+        run: pnpm ci:prepare
+      - name: Harness
+        run: pnpm test:harness:ci
+      - name: 数据库测试
+        run: pnpm test:db

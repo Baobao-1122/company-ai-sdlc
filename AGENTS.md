@@ -10,6 +10,7 @@
 | [docs/workflow-overview.md](docs/workflow-overview.md) | 五层 AI 工作流架构 |
 | [docs/code-review.md](docs/code-review.md) | **每次 commit 前 Code Review + P1 Reflection（Bugbot）** |
 | [docs/pr-review.md](docs/pr-review.md) | **合并前 PR 审查；命中可验算业务结果时须人工判断口径** |
+| [docs/ci-security.md](docs/ci-security.md) | **CI 工作流安全规范与 GitHub 仓库设置清单** |
 | [docs/agent-active-guidance.md](docs/agent-active-guidance.md) | AI 主动引导 |
 | [docs/human-checkpoints.md](docs/human-checkpoints.md) | **人工确认暂停点 CP-01～CP-10** |
 | [docs/decision-rubrics.md](docs/decision-rubrics.md) | **CP 决策判据（Allow/Stop + 决策包）** |
@@ -35,6 +36,9 @@
 | `.cursor/rules/` | 公司通用 Rule（复制到业务项目） |
 | `.cursor/rules/data-redlines.mdc` | **数据红线**（含禁止擅自写生产库） |
 | `.cursor/rules/security-baseline.mdc` | Web 安全基线 |
+| `.cursor/rules/ci-security.mdc` | **CI 工作流安全**（配套检查脚本与工作流模板见 `templates/`） |
+| `templates/check-ci-workflow-security.example.mjs` | CI 工作流检查脚本模板（`guard:ci-workflow-security`） |
+| `templates/ci/db-tests.workflow.example.yml` | 数据库项目 CI 工作流模板 |
 | `.cursor/skills/sdlc-*` | SDLC 阶段 Skill（含 `sdlc-task-state`、`sdlc-pr-review`、条件触发的 `sdlc-architecture`） |
 | `templates/task-state.template.yaml` | 业务项目 `.sdlc/task-state.yaml` 模板 |
 | `scripts/init-project-sdlc.sh` | 项目一键接入 |
