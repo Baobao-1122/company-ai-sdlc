@@ -139,8 +139,9 @@ Agent 在 `⏸ CP-xx` 前**必须**按序输出：
 | 4 | 风险等级 | 低/中且可说明 | 高 |
 | 5 | Next.js middleware/proxy 改写 Response（若 diff 命中） | 透传 `response.body` 且保留 `Content-Type`；无 auth Cookie 双写 | 读 body 重建为 string 且未拷贝 Content-Type；或 middleware 与 `/api/auth` 双写 |
 | 6 | 业务数据对账证据（若本次命中数据影响面） | CP-05 有只读核对结论与问题清单；diff 无「对账脚本写库」 | 无证据；或以校验名义含写库/删库逻辑 |
+| 7 | CI 工作流（若 diff 命中 `.github/**`、`scripts/check-ci-workflow-security.mjs` 或 `harness.config.ts`） | `guard:ci-workflow-security` 通过；Security Review 已跑；无密钥、无真实环境连接、无部署步骤；检查脚本与 harness 里的检查步骤没有被删除或放宽 | 检查脚本不通过；未跑 Security；出现 secrets、vars、environment、`pull_request_target`、写权限、未锁哈希的 action 或真实环境凭据；检查规则或 harness 检查步骤被删除、放宽 |
 
-见 [code-review.md](code-review.md) 审查结论表、**§8 Response 改写红线**与 **§9 业务数据只读对账**。
+见 [code-review.md](code-review.md) 审查结论表、**§8 Response 改写红线**、**§9 业务数据只读对账**与 [ci-security.md](ci-security.md)。
 
 ---
 
@@ -243,6 +244,7 @@ Agent 在 `⏸ CP-xx` 前**必须**按序输出：
 
 | 日期 | 版本 | 说明 |
 |------|------|------|
+| 2026-10-29 | v1.13 | CP-06 步骤 1 #7：CI 工作流、检查脚本或 harness 配置改动须过检查脚本与 Security |
 | 2026-10-28 | v1.12 | CP-08 #6 合并证据：未执行路径和项目必查项进保留项 |
 | 2026-10-24 | v1.11 | CP-08 增加 PR 审查、可验算业务结果与人工口径 |
 | 2026-10-21 | v1.10 | CP-09 #3 归档须追加索引并写 `previousTask` |
