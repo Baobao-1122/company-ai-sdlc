@@ -78,7 +78,7 @@ copy_skills() {
 copy_sdlc_docs() {
   local dest="$1"
   mkdir -p "$dest/docs/qa"
-  for f in human-checkpoints.md agent-active-guidance.md code-review.md decision-rubrics.md pr-review.md task-state.md; do
+  for f in human-checkpoints.md agent-active-guidance.md code-review.md decision-rubrics.md pr-review.md task-state.md ci-security.md; do
     local base="ai-sdlc-${f}"
     if [[ -f "$dest/docs/qa/$base" ]]; then
       warn "跳过已存在: docs/qa/$base"
@@ -96,6 +96,18 @@ copy_sdlc_docs() {
       log "已复制: docs/qa/ai-sdlc-cp-extension.template.md"
     fi
   fi
+}
+
+copy_ci_security_guard() {
+  local dest="$1"
+  local target="$dest/scripts/check-ci-workflow-security.mjs"
+  mkdir -p "$dest/scripts"
+  if [[ -f "$target" ]]; then
+    warn "跳过已存在: scripts/check-ci-workflow-security.mjs"
+    return
+  fi
+  cp "$SDLC_ROOT/templates/check-ci-workflow-security.example.mjs" "$target"
+  log "已复制: scripts/check-ci-workflow-security.mjs"
 }
 
 generate_agents_md() {
@@ -155,6 +167,7 @@ pnpm test:harness:ci               # 合并前
 | [docs/qa/ai-sdlc-human-checkpoints.md](docs/qa/ai-sdlc-human-checkpoints.md) | CP-01～CP-10 何时停 |
 | [docs/qa/ai-sdlc-decision-rubrics.md](docs/qa/ai-sdlc-decision-rubrics.md) | **CP 判断要点（Allow/Stop）** |
 | [docs/qa/ai-sdlc-code-review.md](docs/qa/ai-sdlc-code-review.md) | 每次 commit 前 Review |
+| [docs/qa/ai-sdlc-ci-security.md](docs/qa/ai-sdlc-ci-security.md) | CI 工作流安全：只读权限、无密钥、不连真实环境 |
 
 流程：**需求 → 设计 → 实现 → 验证 → （你要求时）提交**；harness 后（若触发）**P1 Reflection**；提交前必跑 \`test:harness:ci\` + \`sdlc-review\`（**CP-06 Reflection**）。Agent 须在 P1/CP-06 前输出 \`🔄 Reflection\` 标题（见 code-review §11）。
 
@@ -232,6 +245,10 @@ if (!pkg.scripts['test:harness:ci']) {
   pkg.scripts['test:harness:ci'] = 'harness run --profile ci';
   changed = true;
 }
+if (!pkg.scripts['guard:ci-workflow-security']) {
+  pkg.scripts['guard:ci-workflow-security'] = 'node scripts/check-ci-workflow-security.mjs';
+  changed = true;
+}
 if (changed) {
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
   console.log('[init-sdlc] 已更新 package.json scripts');
@@ -240,7 +257,7 @@ if (changed) {
 }
 NODE
   else
-    warn "未安装 node，请手动在 package.json 添加 test:harness / test:harness:ci"
+    warn "未安装 node，请手动在 package.json 添加 test:harness / test:harness:ci / guard:ci-workflow-security"
   fi
 }
 
@@ -289,6 +306,7 @@ init_sdlc_task_state_dir() {
 copy_rules "$PROJECT_PATH"
 copy_skills "$PROJECT_PATH"
 copy_sdlc_docs "$PROJECT_PATH"
+copy_ci_security_guard "$PROJECT_PATH"
 init_sdlc_task_state_dir "$PROJECT_PATH"
 generate_agents_md "$PROJECT_PATH"
 generate_prd "$PROJECT_PATH"
@@ -305,6 +323,8 @@ cat <<EOF
   4. 编辑 harness.config.ts — 按实际测试/lint 命令调整 layers
   5. 安装 Harness: pnpm add -D @linzhang1122/web-harness
   6. 验证: pnpm test:harness:ci
+  7. 要加 GitHub Actions 时：从 templates/ci/db-tests.workflow.example.yml 起步，并由人按
+     docs/qa/ai-sdlc-ci-security.md §4 设置仓库（Actions 只允许官方且锁哈希、令牌只读、无 Secrets）
 
 详细说明: $SDLC_ROOT/docs/project-onboarding.md
 
