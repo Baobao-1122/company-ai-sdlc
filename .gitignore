@@ -1,2 +1,3 @@
 .DS_Store
 .tmp-test-project/
+tools/diagram-renderer/node_modules/
