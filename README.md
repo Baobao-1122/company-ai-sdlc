@@ -24,6 +24,18 @@
 
 完整说明见 **[docs/project-onboarding.md](docs/project-onboarding.md)**（含决策树、达标清单、验证命令、汇报模板）。
 
+### 3. 共享 Mermaid 制图工具
+
+首次在标准库安装后，任意业务项目可调用共享的 Mermaid CLI 导出 SVG 与高清 PNG，不需要将渲染依赖安装到业务项目：
+
+```bash
+pnpm --dir /path/to/company-ai-sdlc/tools/diagram-renderer diagram:render -- \
+  /path/to/project/docs/architecture/system-context.mmd \
+  --output-dir /path/to/project/docs/architecture/images
+```
+
+安装、参数与图内样式说明见 [tools/diagram-renderer/README.md](tools/diagram-renderer/README.md)。
+
 ## AI 工作流五层架构
 
 ```
@@ -77,6 +89,8 @@ company-ai-sdlc/
 ├── .cursor/
 │   ├── rules/                # 公司通用 Rule（复制到业务项目）
 │   └── skills/               # SDLC 阶段 Skill
+├── tools/
+│   └── diagram-renderer/     # 共享 Mermaid SVG / 高清 PNG 渲染工具
 └── scripts/
     └── init-project-sdlc.sh  # 一键接入脚本
 ```
