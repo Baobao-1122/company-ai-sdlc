@@ -6,6 +6,8 @@
 
 将已确认的需求拆为可独立实现、可独立验收的任务。项目尚未接受技术栈时，先读 [tech-stack-selection.md](../tech-stack-selection.md)，把选择写进该项目的技术决定。
 
+CP-01 选用了产品模版时，已沿用的能力和交互不再重开。本阶段只为本系统差异写技术方案。
+
 ## Agent 执行步骤
 
 0. 按 Skill `sdlc-architecture` 判断要不要做架构审查。未命中则把 `status` 写成 `not_required`，写明理由并继续。命中则先完成审查，再列出文件。

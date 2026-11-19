@@ -18,6 +18,7 @@
 | [docs/tech-stack-selection.md](docs/tech-stack-selection.md) | **按产品形态选技术栈：Web 或引擎** |
 | [docs/task-state.md](docs/task-state.md) | **任务状态 schema（换 Chat 可续）** |
 | [docs/stages/](docs/stages/) | 各 SDLC 阶段操作说明 |
+| [docs/product-templates/](docs/product-templates/) | 产品模版库。需求阶段先查，命中则沿用 |
 
 ## 仓库边界
 

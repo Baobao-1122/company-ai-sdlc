@@ -98,6 +98,27 @@ copy_sdlc_docs() {
   fi
 }
 
+copy_product_templates() {
+  local dest="$1"
+  local src="$SDLC_ROOT/docs/product-templates"
+  if [[ ! -d "$src" ]]; then
+    warn "未找到产品模版库，跳过 docs/product-templates/"
+    return
+  fi
+  mkdir -p "$dest/docs/product-templates"
+  local f base
+  for f in "$src"/*; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    if [[ -f "$dest/docs/product-templates/$base" ]]; then
+      warn "跳过已存在: docs/product-templates/$base"
+    else
+      cp "$f" "$dest/docs/product-templates/$base"
+      log "已复制: docs/product-templates/$base"
+    fi
+  done
+}
+
 copy_ci_security_guard() {
   local dest="$1"
   local target="$dest/scripts/check-ci-workflow-security.mjs"
@@ -306,6 +327,7 @@ init_sdlc_task_state_dir() {
 copy_rules "$PROJECT_PATH"
 copy_skills "$PROJECT_PATH"
 copy_sdlc_docs "$PROJECT_PATH"
+copy_product_templates "$PROJECT_PATH"
 copy_ci_security_guard "$PROJECT_PATH"
 init_sdlc_task_state_dir "$PROJECT_PATH"
 generate_agents_md "$PROJECT_PATH"
