@@ -79,6 +79,7 @@ company-ai-sdlc/
 │   ├── ai-native-optimization.md # AI-Native 流程优化方案（未实施）
 │   ├── agent-architecture.md # 多 Agent 架构设计稿（未实施）
 │   ├── asset-library.md      # 资产库设计稿（未实施）
+│   ├── ai-native-checklist.md # AI-Native 重构总进度清单
 │   ├── product-templates/    # 产品模版库。需求阶段先查，命中则沿用
 │   └── stages/               # 各阶段操作说明
 ├── templates/                # 可复制到业务项目的模板

@@ -22,6 +22,7 @@
 | [docs/ai-native-optimization.md](docs/ai-native-optimization.md) | **AI-Native 流程优化方案**（未实施）：现状问题、资产库四层、同步机制、三期路线 |
 | [docs/agent-architecture.md](docs/agent-architecture.md) | **多 Agent 架构设计稿**（未实施）：编排加各环节 Agent、能力包、交接文件、旧流程迁移、试点项目 |
 | [docs/asset-library.md](docs/asset-library.md) | **资产库设计稿**（未实施）：什么适合沉淀、分层目录、进库流程与阶段复盘、来源代号、首批候选、资产度量 |
+| [docs/ai-native-checklist.md](docs/ai-native-checklist.md) | **AI-Native 重构总进度清单**：已定决策、7 步落地、合并与迁移、旁支任务 |
 
 ## 仓库边界
 

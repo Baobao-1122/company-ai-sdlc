@@ -7,7 +7,7 @@
 
 ## 当前位置
 
-第 1 步（骨架）进行中：集成分支已有 `c72e81c`；分支 `feat/ai-native-skeleton` 在其上新增 7 个 commit，前 3 个已推送，后 4 个待推送；PR 待开。
+第 1 步（骨架）进行中：集成分支已有 `c72e81c`；分支 `feat/ai-native-skeleton` 在其上新增 7 个 commit，已全部推送；已开 [PR #14](https://github.com/Baobao-1122/company-ai-sdlc/pull/14)，审查意见已修复，待合入。
 
 ---
 
@@ -37,6 +37,7 @@
 - [x] 资产库补：分工（标准库负责人拍板）、阶段复盘触发规则、资产度量（`bde7163`）
 - [x] 其余子 Agent 入口示例：视觉、交互检查、架构审查、复盘；审查用内置 Bugbot，不另设入口（`08fee64`）
 - [x] 推送 `feat/ai-native-skeleton`（2026-11-25）
+- [x] 开 [PR #14](https://github.com/Baobao-1122/company-ai-sdlc/pull/14)，PR 审查：无 Blocker / High，3 条 Medium、3 条 Low 已修复（修复复审补 1 条：视觉能力包设计确认分档）
 - [ ] PR 合入 `feat/ai-native-sdlc`（走 `sdlc-pr-review`）
 
 **完成标准：** 目录与模板齐全；红线 Rule 保持一直生效。
@@ -117,3 +118,4 @@
 | 日期 | 版本 | 说明 |
 |---|---|---|
 | 2026-11-25 | v1 | 首版：已定决策、7 步落地清单、合并与迁移、旁支任务 |
+| 2026-11-25 | v1.1 | 更新当前位置：7 个 commit 已推送，PR #14 已开并按审查意见修复 |
