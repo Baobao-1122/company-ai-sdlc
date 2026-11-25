@@ -89,7 +89,9 @@ company-ai-sdlc/
 │   ├── sdlc-worktree-files.example.mjs
 │   ├── check-ci-workflow-security.example.mjs
 │   ├── ci/db-tests.workflow.example.yml
+│   ├── cursor-agents/        # 子 Agent 入口示例（本仓库不启用）
 │   └── docs/prd.template.md
+├── agents/                   # 多 Agent 能力包骨架（未启用）
 ├── .cursor/
 │   ├── rules/                # 公司通用 Rule（复制到业务项目）
 │   └── skills/               # SDLC 阶段 Skill

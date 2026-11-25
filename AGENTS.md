@@ -46,6 +46,8 @@
 | `.cursor/skills/sdlc-*` | SDLC 阶段 Skill（含 `sdlc-task-state`、`sdlc-pr-review`、条件触发的 `sdlc-architecture`） |
 | `templates/task-state.template.yaml` | 业务项目 `.sdlc/task-state.yaml` 模板 |
 | `scripts/init-project-sdlc.sh` | 项目一键接入 |
+| `agents/` | 多 Agent 能力包骨架（未启用）：每个 Agent 的职责、交接约定、经验、评测、交接文件模板 |
+| `templates/cursor-agents/` | 子 Agent 入口示例（安装到业务项目 `.cursor/agents/`；本仓库不启用） |
 
 ## Agent 在本仓库的执行规程
 
