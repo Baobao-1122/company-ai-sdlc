@@ -78,6 +78,8 @@ company-ai-sdlc/
 │   ├── ci-security.md        # CI 工作流安全规范与仓库设置清单
 │   ├── ai-native-optimization.md # AI-Native 流程优化方案（未实施）
 │   ├── agent-architecture.md # 多 Agent 架构设计稿（未实施）
+│   ├── asset-library.md      # 资产库设计稿（未实施）
+│   ├── ai-native-checklist.md # AI-Native 重构总进度清单
 │   ├── product-templates/    # 产品模版库。需求阶段先查，命中则沿用
 │   └── stages/               # 各阶段操作说明
 ├── templates/                # 可复制到业务项目的模板
@@ -88,7 +90,9 @@ company-ai-sdlc/
 │   ├── sdlc-worktree-files.example.mjs
 │   ├── check-ci-workflow-security.example.mjs
 │   ├── ci/db-tests.workflow.example.yml
+│   ├── cursor-agents/        # 子 Agent 入口示例（本仓库不启用）
 │   └── docs/prd.template.md
+├── agents/                   # 多 Agent 能力包骨架（未启用）
 ├── .cursor/
 │   ├── rules/                # 公司通用 Rule（复制到业务项目）
 │   └── skills/               # SDLC 阶段 Skill

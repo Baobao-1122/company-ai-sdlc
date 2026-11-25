@@ -21,6 +21,8 @@
 | [docs/product-templates/](docs/product-templates/) | 产品模版库。需求阶段先查，命中则沿用 |
 | [docs/ai-native-optimization.md](docs/ai-native-optimization.md) | **AI-Native 流程优化方案**（未实施）：现状问题、资产库四层、同步机制、三期路线 |
 | [docs/agent-architecture.md](docs/agent-architecture.md) | **多 Agent 架构设计稿**（未实施）：编排加各环节 Agent、能力包、交接文件、旧流程迁移、试点项目 |
+| [docs/asset-library.md](docs/asset-library.md) | **资产库设计稿**（未实施）：什么适合沉淀、分层目录、进库流程与阶段复盘、来源代号、首批候选、资产度量 |
+| [docs/ai-native-checklist.md](docs/ai-native-checklist.md) | **AI-Native 重构总进度清单**：已定决策、7 步落地、合并与迁移、旁支任务 |
 
 ## 仓库边界
 
@@ -45,6 +47,8 @@
 | `.cursor/skills/sdlc-*` | SDLC 阶段 Skill（含 `sdlc-task-state`、`sdlc-pr-review`、条件触发的 `sdlc-architecture`） |
 | `templates/task-state.template.yaml` | 业务项目 `.sdlc/task-state.yaml` 模板 |
 | `scripts/init-project-sdlc.sh` | 项目一键接入 |
+| `agents/` | 多 Agent 能力包骨架（未启用）：每个 Agent 的职责、交接约定、经验、评测、交接文件模板 |
+| `templates/cursor-agents/` | 子 Agent 入口示例（安装到业务项目 `.cursor/agents/`；本仓库不启用） |
 
 ## Agent 在本仓库的执行规程
 
