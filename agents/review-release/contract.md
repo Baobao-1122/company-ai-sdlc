@@ -15,7 +15,7 @@
 | 文件 | 模板 |
 |---|---|
 | `.sdlc/specs/<taskId>/review.md` | [templates/review.md](templates/review.md) |
-| `.sdlc/upstream-candidates.md` | 复用候选（追加） |
+| `.sdlc/upstream-candidates.md` | 复用候选（追加，字段见 [docs/asset-library.md](../../docs/asset-library.md) §5.2） |
 | PR | 合并前 |
 
 ## 完成标准

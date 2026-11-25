@@ -32,7 +32,7 @@
 3. **出路线**：按模板 [templates/route.md](templates/route.md) 写 `.sdlc/specs/<taskId>/route.md`；标准档、重型档请人确认；快速档同时写“快速档说明”，作为研发、测试、审查的交接
 4. **调度**：按路线唤起 Agent；每个交接文件通过其 `contract.md` 的完成标准后再交下游
 5. **检查点**：按设计稿 §7 的档位表停下
-6. **收尾**：CP-09 时归档 task-state，追加 history 索引
+6. **收尾**：CP-09 时问一句“这次做的功能，别的系统会不会也要”，答“会”则按 [docs/asset-library.md](../../docs/asset-library.md) §5.2 的六个字段记入 `.sdlc/upstream-candidates.md`；归档 task-state，追加 history 索引；按复盘 Agent 的触发表判断是否该做阶段复盘，触发则提示人并唤起复盘 Agent（[agents/retrospective/AGENT.md](../retrospective/AGENT.md)）。开工检查时也查一次时间兜底
 
 ## 检查
 
@@ -41,6 +41,7 @@
 | 判档硬规则脚本 | 待建；以项目甲的 P1、E2E 触发检查脚本为底子 |
 | `route.md` 档位不低于硬规则判定 | 待建 |
 | 红线齐全、引用命令存在 | 待建 |
+| 阶段复盘是否触发 | 待建（读 `.sdlc/history/index.md` 与 `.sdlc/retros/`） |
 
 ## 人工检查点
 

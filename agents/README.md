@@ -17,6 +17,7 @@
 | [development](development/) | 研发 | 主对话，可并行子 Agent | 代码、migration、文档同步 | `sdlc-implement`、`general-principles.mdc`、`docs-sync.mdc` |
 | [test](test/) | 测试 | 子 Agent，与研发分开 | `test-plan.md` | `sdlc-verify`、harness 模板 |
 | [review-release](review-release/) | 审查与发布 | 子 Agent 审查，主对话汇总 | `review.md`、PR | `sdlc-review`、`sdlc-pr-review`、`code-review.md`、`pr-review.md` |
+| [retrospective](retrospective/) | 复盘 | 只读子 Agent，按项目阶段触发 | 复盘报告（`.sdlc/retros/`） | 新建 |
 
 交互与视觉的能力包分开维护；起步时可由同一个“产品设计”运行实例加载两个能力包。
 
