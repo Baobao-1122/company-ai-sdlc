@@ -21,6 +21,7 @@
 | [docs/product-templates/](docs/product-templates/) | 产品模版库。需求阶段先查，命中则沿用 |
 | [docs/ai-native-optimization.md](docs/ai-native-optimization.md) | **AI-Native 流程优化方案**（未实施）：现状问题、资产库四层、同步机制、三期路线 |
 | [docs/agent-architecture.md](docs/agent-architecture.md) | **多 Agent 架构设计稿**（未实施）：编排加各环节 Agent、能力包、交接文件、旧流程迁移、试点项目 |
+| [docs/asset-library.md](docs/asset-library.md) | **资产库设计稿**（未实施）：什么适合沉淀、分层目录、进库流程、来源代号、首批候选 |
 
 ## 仓库边界
 
