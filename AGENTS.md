@@ -19,6 +19,8 @@
 | [docs/task-state.md](docs/task-state.md) | **任务状态 schema（换 Chat 可续）** |
 | [docs/stages/](docs/stages/) | 各 SDLC 阶段操作说明 |
 | [docs/product-templates/](docs/product-templates/) | 产品模版库。需求阶段先查，命中则沿用 |
+| [docs/ai-native-optimization.md](docs/ai-native-optimization.md) | **AI-Native 流程优化方案**（未实施）：现状问题、资产库四层、同步机制、三期路线 |
+| [docs/agent-architecture.md](docs/agent-architecture.md) | **多 Agent 架构设计稿**（未实施）：编排加各环节 Agent、能力包、交接文件、旧流程迁移、试点项目 |
 
 ## 仓库边界
 

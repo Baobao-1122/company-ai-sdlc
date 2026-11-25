@@ -76,6 +76,8 @@ company-ai-sdlc/
 │   ├── commit-rules-audit.md # CP-06 Rules + guard 激活
 │   ├── pr-review.md          # CP-08 PR 审查与人工口径题
 │   ├── ci-security.md        # CI 工作流安全规范与仓库设置清单
+│   ├── ai-native-optimization.md # AI-Native 流程优化方案（未实施）
+│   ├── agent-architecture.md # 多 Agent 架构设计稿（未实施）
 │   ├── product-templates/    # 产品模版库。需求阶段先查，命中则沿用
 │   └── stages/               # 各阶段操作说明
 ├── templates/                # 可复制到业务项目的模板
